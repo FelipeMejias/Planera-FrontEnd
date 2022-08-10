@@ -7,13 +7,13 @@ import { postHabit, putHabit } from '../api';
 import PlanerContext from '../contexts/PlanerContext';
 	
     
-export default function CreateHabit({findHabits,create,details}){
+export default function CreateHabit({create,details}){
     const navigate=useNavigate()
     const {token} = useContext(TokenContext)
-    const {setPopUp}=useContext(PlanerContext)
+    const {setPopUp,findHabits}=useContext(PlanerContext)
     const [title,setTitle]=useState(create?'':details.title)
-    const [begin,setBegin]=useState(create?'':details.begin)
-    const [end,setEnd]=useState(create?'':details.end)
+    const [begin,setBegin]=useState(create?'':details.begin.replace(':','.'))
+    const [end,setEnd]=useState(create?'':details.end.replace(':','.'))
     const [day,setDay]=useState(create?null:details.day)
     const [errorMsg,setErrorMsg]=useState('')
     function checkPattern(string){
@@ -23,7 +23,7 @@ export default function CreateHabit({findHabits,create,details}){
     }
     function saveHabit(event){
         event.preventDefault()
-        if(token)return navigate('/signin')
+        if(!token)return navigate('/signin')
         if(checkPattern(begin))return setErrorMsg('Escreva a hora de início corretamente')
         if(checkPattern(end))return setErrorMsg('Escreva a hora do final corretamente')
         if(!day)return setErrorMsg('Escolha ao menos um dia da semana')
@@ -46,6 +46,7 @@ export default function CreateHabit({findHabits,create,details}){
                     <DayButton onClick={()=>setDay(index)} selected={day===index}>{name}</DayButton>
                 ))}
             </ul>
+            
             <div className='organiza'>
                 <div>
                     <input type='number' onChange={(e)=>setBegin(e.target.value)} placeholder='horário início' value={begin}></input>
@@ -77,7 +78,7 @@ display:flex;padding:10px;box-sizing:border-box;flex-direction:column;
     border:0.3vh solid black;
     div{display:flex;flex-direction:column}
 span{display:flex}
-input{height:28px;width:148px;font-size:18px;margin:10px 0 10px 0;padding-left:6px}
+input{height:28px;width:92%;font-size:18px;margin:10px 0 10px 0;padding-left:6px}
 .organiza button{max-width:100px;width:24vw;border-radius:10px;font-size:15px;height:35px;margin:10px 0 10px 0;
     background-color:blue;color:white;border:0;margin-right:5px}
     .organiza .canc{background-color:brown;width:35px;margin-right:25px}
@@ -88,10 +89,6 @@ input{height:28px;width:148px;font-size:18px;margin:10px 0 10px 0;padding-left:6
     .organiza{display:flex;flex-direction:row;justify-content:space-evenly;}
     @media(max-width:900px){
         position:fixed;top:18vh;z-index:6;width:90vw;left:5vw;
-        input{
-            width:37vw;margin-right:2vw
-        }
-    div{}
     }
 `
 

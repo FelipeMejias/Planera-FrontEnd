@@ -1,11 +1,11 @@
 import {useState,useEffect,useContext} from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
-import { AiFillSetting, AiOutlineCalendar, AiOutlineFileAdd, AiOutlineMenu } from "react-icons/ai";
+import { AiFillSetting, AiOutlineArrowLeft, AiOutlineCalendar, AiOutlineFileAdd, AiOutlineMenu } from "react-icons/ai";
 
 import TokenContext from '../contexts/TokenContext'
-import { getHabits } from '../api'
+import { findGroupHabits, getHabits } from '../api'
 import Board from '../components/Board'
 import HabitDetails from '../components/HabitDetails';
 import CreateHabit from '../components/CreateHabit';
@@ -13,16 +13,17 @@ import Preferences from '../components/Preferences';
 import PlanerContext from '../contexts/PlanerContext';
 import Modal from '../components/Modal';
 import UserContext from '../contexts/UserContext';
+import GroupContext from '../contexts/GroupContext';
 	
-export default function PlanerPage(){
+export default function GroupBoardPage(){
     const {token} = useContext(TokenContext)
-    const {user,preferences}=useContext(UserContext)
+    const {preferences}=useContext(UserContext)
+    const {chosen,members,popUp,setPopUp}=useContext(GroupContext)
+
     const navigate=useNavigate()
-
     const [details,setDetails]=useState({})
-    const [popUp,setPopUp]=useState('')
     const [habits,setHabits]=useState([])
-
+    const {groupId}=useParams()
     function defineNow(){
         const now=dayjs().format('HH:mm-d');
         const day=parseInt(now[6])
@@ -33,8 +34,8 @@ export default function PlanerPage(){
     const [now,setNow]=useState({day:null,scrollIndex:null})
 
     function findHabits(scroll,size=preferences.size){
-        
-        const promise=getHabits(token)
+        const chosenData =  {chosen} 
+        const promise=findGroupHabits(chosenData,groupId,token)
         promise.then((res)=>{
             const habits=res.data
             setHabits(habits)
@@ -45,6 +46,12 @@ export default function PlanerPage(){
         })
         promise.catch((e)=>{console.log(e)})
         
+    }
+    function definePageName(){
+        const len=chosen.length
+        if(len===members.length)return 'Todos'
+        if(len!==1)return `${len} integrantes`
+        for(let part of members)if(part.id===chosen[0])return `${part.name}`
     }
     function findIndex_scrollBoard(habits,size){
         let earlierHabit=Infinity
@@ -59,60 +66,52 @@ export default function PlanerPage(){
         board.scrollBy(0,-2000)
         board.scrollBy(0,finalIndex)
     }
-
     useEffect(()=>{
         findHabits(defineNow())
         setInterval(defineNow,60000)
     },[])
-
-    useEffect(()=>{if(!token)navigate('/signin')},[token])
-
     return(
         <Content>
-            <PlanerContext.Provider value={{ popUp, setPopUp,findHabits }}>
-            {popUp==='creating'?<CreateHabit create={true}/>:<></>}
-            {popUp==='detailing'||popUp==='deleting'?<HabitDetails setDetails={setDetails} details={details}/>:<></>}
+            {popUp==='detailing'?<HabitDetails setDetails={setDetails} details={details}/>:<></>}
             {popUp==='prefering'?<Preferences findHabits={findHabits} setPopUp={setPopUp}/>:<></>}
-            {popUp==='editing'?<CreateHabit create={false} details={details} />:<></>}
-            {popUp==='loading habits'?<Modal buttons={false} text={`carregando agenda de ${user.name}`}/>:<></>}
-            <Header>
-                <span>
-                    <Button onClick={()=>navigate('/menu')}><AiOutlineMenu/></Button>
-                    <Button onClick={()=>setPopUp('creating')}><AiOutlineFileAdd/></Button>
+            <div className='orgAgenda'>
+                <span className='buttonGB'>
+                    <Button onClick={()=>navigate(`/group/${groupId}`)}><AiOutlineArrowLeft/></Button>
+                    <h1>{definePageName()}</h1>
                     <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
+                    
+                    
                 </span>
-            </Header>
-            <BoardContainer>
-                <Board inGroup={false} now={now} habits={habits} setDetails={setDetails} setPopUp={setPopUp} />
-            </BoardContainer>
-            </PlanerContext.Provider>
+            </div>
+            <div className='orgAgenda2'>
+                <Board inGroup={true} now={now} habits={habits} setDetails={setDetails}  setPopUp={setPopUp}/>
+            </div>
         </Content>
     )
 }
 
 const Button=styled.button`display:flex;justify-content:center;align-items:center;
 width:7vh;height:7vh;border-radius:10px;position:relative;
-justify-content:center;align-items:center;
+    display:flex;justify-content:center;align-items:center;
 background-color:#cc9139;
 color:#6b491a;
 font-size:35px;border:0vh solid black;
 h2{font-size:18px}
 `
-const Header=styled.section`
-height:95vh;width:9vh;display:flex;flex-direction:column;align-items:center;
-span{display:flex;height:24vh;justify-content:space-between;width:85%;flex-direction:column}
-@media(max-width:900px){
-    height:10vh;width:96vw;display:flex;flex-direction:row;margin:0 0 10px 0;
-    span{flex-direction:row;width:96vw;height:7vh;justify-content:space-between;align-items:center;}
-}`
-const BoardContainer=styled.section`
-height:95vh;display:flex;justify-content:space-between;flex-wrap:wrap
-`
+
 const Content=styled.div`
-width: 100%;height:100vh;
+width: 100%;box-sizing:border-box;height:100vh;
 background-color: #cc9139;
 display: flex;justify-content:center;
 align-items: center;
+.orgAgenda{
+    height:95vh;width:9vh;display:flex;flex-direction:column;align-items:center;}
+.orgAgenda2{height:95vh;display:flex;justify-content:space-between;flex-wrap:wrap}
+.buttonGB{display:flex;
+    width:96vw;height:7vh;justify-content:space-between;align-items:center;}
+}
 @media(max-width:900px){
     flex-direction:column;justify-content:flex-start;align-items:center;
-}`
+    .orgAgenda{height:10vh;width:96vw;display:flex;flex-direction:row;margin:0 0 10px 0;}
+    
+`

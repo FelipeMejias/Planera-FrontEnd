@@ -1,15 +1,21 @@
-import { useState,useEffect } from "react"
+import { useState,useEffect, useContext } from "react"
 import styled from 'styled-components'
+import GroupContext from "../contexts/GroupContext"
+import PlanerContext from "../contexts/PlanerContext"
+import UserContext from "../contexts/UserContext"
 
-export default function Board({now,habits,setDetails,preferences}){
+export default function Board({inGroup,now,habits,setDetails,setPopUp}){
     const [daysData,setDaysData]=useState([])
-
+    const {preferences}=useContext(UserContext)
+    const {with_sab_dom,scale}=preferences
+    const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0']
+    const colorNames=['red','yellow','green','blue','purple']
+    const daysNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
     function separateHabits(){
-        const daysNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
         let days=daysNames.map((name,index)=>({
             name,content:habits.filter((habit)=>habit.day===index)
         }))
-        if(!preferences.sabdom)days=days.filter((day)=>(day.name!=='DOM'&&day.name!=='SAB'))
+        days=days.filter((day)=>(!with_sab_dom?day.name!=='DOM'&&day.name!=='SAB':true))
         setDaysData(days)
     }
     const hours=[]
@@ -30,7 +36,7 @@ export default function Board({now,habits,setDetails,preferences}){
                 if(e){break}
                 width='44.2';position='right:4%';c=true
             }
-            if(j.floor===obj.size){
+            if(j.floor===obj.floor){
                 if(obj.size>j.size){width='44.2';position='right:4%';c=true}
                 if(obj.size<j.size){width='44.2';position='left:4%'}
             }
@@ -43,22 +49,22 @@ export default function Board({now,habits,setDetails,preferences}){
         return {width,position}
     }
     const days=daysData.map((day,index)=>(
-            <Day scale={preferences.scale}>
+            <Day scale={scale}>
 
-                {now.day===index?<NowIndicator level={now.level*4.16}></NowIndicator>:<></>}
+                {index===(with_sab_dom?now.day:now.day-1)?<NowIndicator level={now.level*4.16}></NowIndicator>:<></>}
                 {hours.map(i=>(<Marks level={i*4.16} ></Marks>))}
                 {index===0?hours.map(i=>(<Hours level={i*4.16-0.8} side={false}><span>{i}</span></Hours>)):<></>}
-                {index===(preferences.with_sab_dom?6:4)?hours.map(i=>(<Hours level={i*4.16-0.8} side={true}><span>{i}</span></Hours>)):<></>}
+                {index===(with_sab_dom?6:4)?hours.map(i=>(<Hours level={i*4.16-0.8} side={true}><span>{i}</span></Hours>)):<></>}
 
                 <p>{day.name}</p>
 
                 {day.content.map(habit=>{
-                    const {floor,size,color,title}=habit
+                    const {floor,size,color,title,tag}=habit
                     const {width,position}=define_width_position(habit,day.content)
                     return(
-                    <Habit width={width} position={position} level={floor*4.16} size={size*4.16} cor={color} 
-                        onClick={()=>setDetails(habit)} >
-                        <h1>{title}</h1>
+                    <Habit width={width} position={position} level={floor*0.0416} size={size*0.0416} color={colorCodes[colorNames.indexOf(color)]} 
+                        onClick={()=>{setPopUp('detailing');setDetails(habit)}} >
+                        <h1>{inGroup?tag:title}</h1>
                     </Habit>
                 )})}
             </Day>)
@@ -110,10 +116,10 @@ const Day =styled.div`
     display:flex;flex-direction:column;align-items:center;
     position:relative;
 p{
-    font-size:11px;
-    color:black;top:4vh;z-index:8;position:fixed;
+    font-size:13px;
+    color:#CC9139;top:2.7vh;z-index:8;position:fixed;
     @media(max-width:900px){
-        top:9.2vh
+        top:11.0vh
     }
 
 }.divz{width:18px;display:flex;justify-content:center;
@@ -127,7 +133,9 @@ const Content=styled.div`
 width: 95vw;max-width:1050px;
 height: 95vh;overflow:hidden;overflow-y:scroll;box-sizing:border-box;
 background-color: #d3b28b;
-border:0.3vh solid #6b491a;padding-left:11px;padding-right:11px;
+border:0.3vh solid #6b491a;
+border-top:2vh solid #6b491a;
+padding-left:11px;padding-right:11px;
 border-radius: 1.5vh;
 position:relative;
 @media(max-width:900px){

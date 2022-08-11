@@ -1,7 +1,5 @@
 import { useState,useEffect, useContext } from "react"
 import styled from 'styled-components'
-import GroupContext from "../contexts/GroupContext"
-import PlanerContext from "../contexts/PlanerContext"
 import UserContext from "../contexts/UserContext"
 
 export default function Board({inGroup,now,habits,setDetails,setPopUp}){
@@ -64,7 +62,7 @@ export default function Board({inGroup,now,habits,setDetails,setPopUp}){
                     return(
                     <Habit width={width} position={position} level={floor*0.0416} size={size*0.0416} color={colorCodes[colorNames.indexOf(color)]} 
                         onClick={()=>{setPopUp('detailing');setDetails(habit)}} >
-                        <h1>{inGroup?tag:title}</h1>
+                        <h1>{inGroup?tag||title:title}</h1>
                     </Habit>
                 )})}
             </Day>)

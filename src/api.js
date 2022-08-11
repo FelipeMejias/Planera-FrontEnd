@@ -42,17 +42,24 @@ export const getGroup = async (id,token)=> {
 }
 
 
+export const exitGroup = async (groupId,token)=> {
+  return api.delete(`/userGroup/${groupId}`, buildHeader(token));
+}
+export const changeGroupColor = async (changeData,id,token)=> {
+  return api.put(`/userGroup/${id}`,changeData, buildHeader(token));
+}
+
 export const sendEnvitation = async (invitationData,id,token)=> {
-  return api.post(`/invitation/${id}`, invitationData , buildHeader(token));
+  return api.post(`/userGroup/${id}`, invitationData , buildHeader(token));
 }
 export const getEnvitation = async (token)=> {
-  return api.get(`/invitation`, buildHeader(token));
+  return api.get(`/userGroup`, buildHeader(token));
 }
 export const aceptInvitation = async (id,token)=> {
-  return api.put(`/invitation/${id}`,{}, buildHeader(token));
+  return api.put(`/userGroup/${id}/acept`,{}, buildHeader(token));
 }
 export const rejectInvitation = async (id,token)=> {
-  return api.delete(`/invitation/${id}`, buildHeader(token));
+  return api.delete(`/userGroup/${id}/reject`, buildHeader(token));
 }
 
 
@@ -62,6 +69,10 @@ export const postAllow = async (allowData,id,token)=> {
 
 export const findGroupHabits = async (chosenData,id,token)=> {
   return api.post(`/allow/${id}/crossboard`,chosenData, buildHeader(token));
+}
+
+export const findAllows = async (id,token)=> {
+  return api.get(`/allow/${id}`, buildHeader(token));
 }
 
 

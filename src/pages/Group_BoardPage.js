@@ -79,8 +79,6 @@ export default function GroupBoardPage(){
                     <Button onClick={()=>navigate(`/group/${groupId}`)}><AiOutlineArrowLeft/></Button>
                     <h1>{definePageName()}</h1>
                     <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
-                    
-                    
                 </span>
             </div>
             <div className='orgAgenda2'>

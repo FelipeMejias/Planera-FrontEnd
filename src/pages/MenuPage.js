@@ -9,15 +9,16 @@ import UserContext from "../contexts/UserContext.js";
 import { aceptInvitation, getEnvitation, getGroups, postGroup, rejectInvitation } from '../api.js';
 import Modal from '../components/Modal.js';
 import { AiFillFolderAdd, AiOutlineBackward, AiOutlineClear, AiOutlineClose, AiOutlineCloseCircle, AiOutlineFolderAdd, AiOutlineGroup, AiOutlineMore, AiOutlinePlus, AiOutlinePlusSquare, AiOutlineRollback, AiOutlineUngroup, AiOutlineUsergroupAdd, AiTwotoneFolderAdd } from 'react-icons/ai';
+import GroupContext from '../contexts/GroupContext.js';
 
 export default function MenuPage(){
   const navigate=useNavigate()
   const {setToken,token}=useContext(TokenContext)
-  const {setUser}=useContext(UserContext)
+  const {setUser,myGroups,setMyGroups}=useContext(UserContext)
+  const {setGroup}=useContext(GroupContext)
   const [name,setName]=useState('')
   const [creatingGroup,setCreatingGroup]=useState(false)
   const [error,setError]=useState('')
-  const [groups,setGroups]=useState([])
   const [invitation,setInvitation]=useState(<></>)
   function logOut(){
     navigate('/signin')
@@ -38,10 +39,9 @@ export default function MenuPage(){
       })
       promise.catch(e=>{if(e.message){setError(e.message)}else{console.log(e)}})
   }
-  function er(e){console.log(e)}
   function getMyGroups(){
     getGroups(token).catch(e=>console.log(e)).then((res)=>{
-      setGroups(res.data)
+      setMyGroups(res.data)
       findEnvitations()
   })}
   function respondInvitation(id,response){
@@ -74,8 +74,11 @@ export default function MenuPage(){
           <h6>PlanerA</h6>
           <Button color='#6B491A' onClick={()=>navigate('/')}><h1>Agenda</h1></Button>
           <span><h5>grupos</h5><ButtonIcon color='#6B491A' onClick={()=>setCreatingGroup(true)}><AiOutlinePlus/></ButtonIcon></span>
-            {groups.map((group)=>(
-              <Button color={group.color} onClick={()=>navigate(`/group/${group.id}`)}><h1>{group.name}</h1></Button>
+            {myGroups.map((group)=>(
+              <Button color={group.color} onClick={()=>{
+                setGroup({color:group.color})
+                navigate(`/group/${group.id}`)
+              }}><h1>{group.name}</h1></Button>
             ))}
           <Button className='logOut' color='brown' onClick={logOut} >Log out</Button>
         </Menu>:
@@ -108,7 +111,7 @@ width: 100%;box-sizing:border-box;height:100vh;
 background-color: #CC9139;
 display: flex;flex-direction:column;
 align-items: center;
-.logOut{margin:100px 0 0 0}
+.logOut{position:absolute;bottom:30px;}
 span{display:flex;justify-content:space-between;align-items:center}
 `
 const ButtonIcon=styled.button`display:flex;justify-content:center;

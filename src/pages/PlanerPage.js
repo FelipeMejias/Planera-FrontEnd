@@ -2,7 +2,7 @@ import {useState,useEffect,useContext} from 'react'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import styled from 'styled-components'
-import { AiFillSetting, AiOutlineCalendar, AiOutlineFileAdd, AiOutlineMenu } from "react-icons/ai";
+import { AiFillHome, AiFillSetting, AiOutlineCalendar, AiOutlineFileAdd, AiOutlineMenu } from "react-icons/ai";
 
 import TokenContext from '../contexts/TokenContext'
 import { getHabits } from '../api'
@@ -18,10 +18,9 @@ export default function PlanerPage(){
     const {token} = useContext(TokenContext)
     const {user,preferences}=useContext(UserContext)
     const navigate=useNavigate()
-
+    const [myHabits,setMyHabits]=useState([])
     const [details,setDetails]=useState({})
     const [popUp,setPopUp]=useState('')
-    const [habits,setHabits]=useState([])
 
     function defineNow(){
         const now=dayjs().format('HH:mm-d');
@@ -33,18 +32,17 @@ export default function PlanerPage(){
     const [now,setNow]=useState({day:null,scrollIndex:null})
 
     function findHabits(scroll,size=preferences.size){
-        
         const promise=getHabits(token)
         promise.then((res)=>{
             const habits=res.data
-            setHabits(habits)
+            setMyHabits(habits)
+            console.log(habits)
             if(scroll){
                 scrollBoard(scroll,size) 
             }else{
             findIndex_scrollBoard(habits,size)}
         })
         promise.catch((e)=>{console.log(e)})
-        
     }
     function findIndex_scrollBoard(habits,size){
         let earlierHabit=Infinity
@@ -77,13 +75,13 @@ export default function PlanerPage(){
             {popUp==='loading habits'?<Modal buttons={false} text={`carregando agenda de ${user.name}`}/>:<></>}
             <Header>
                 <span>
-                    <Button onClick={()=>navigate('/menu')}><AiOutlineMenu/></Button>
+                    <Button onClick={()=>navigate('/menu')}><AiFillHome/></Button>
                     <Button onClick={()=>setPopUp('creating')}><AiOutlineFileAdd/></Button>
                     <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
                 </span>
             </Header>
             <BoardContainer>
-                <Board inGroup={false} now={now} habits={habits} setDetails={setDetails} setPopUp={setPopUp} />
+                <Board inGroup={false} now={now} habits={myHabits} setDetails={setDetails} setPopUp={setPopUp} />
             </BoardContainer>
             </PlanerContext.Provider>
         </Content>

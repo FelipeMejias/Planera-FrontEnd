@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
 import TokenContext from "../contexts/TokenContext.js";
 import UserContext from "../contexts/UserContext.js";
-import { signIn } from '../api.js';
+import { signIn } from '../utils/api.js';
 
 
 export default function EntryPage(){

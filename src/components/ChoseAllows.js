@@ -2,17 +2,15 @@ import { useState,useEffect, useContext } from "react"
 import { AiFillDelete, AiFillEdit, AiFillEye, AiOutlineArrowLeft, AiOutlineClose, AiOutlineCloseSquare, AiOutlineDelete, AiOutlineDeleteColumn, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineLogout, AiOutlineUngroup, AiOutlineUsergroupAdd, AiOutlineUsergroupDelete, AiTwotoneEdit } from "react-icons/ai"
 import { useNavigate } from "react-router-dom"
 import styled from 'styled-components'
-import { exitGroup, findAllows, getHabits, postAllow, rejectInvitation } from "../api"
+import { exitGroup, findAllows, getEvents, getHabits, postAllow, rejectInvitation } from "../utils/api"
 import GroupContext from "../contexts/GroupContext"
 import TokenContext from "../contexts/TokenContext"
-import UserContext from "../contexts/UserContext"
 import Modal from "./Modal"
 
 export default function ChooseAllows({setFace,groupId}){
     const navigate=useNavigate()
     const {token} = useContext(TokenContext)
     const {group}=useContext(GroupContext)
-    const {myGroups}=useContext(UserContext)
     const [allows,setAllows]=useState([])
     const [tag,setTag]=useState('')
     const [tagging,setTagging]=useState('')
@@ -21,17 +19,18 @@ export default function ChooseAllows({setFace,groupId}){
     const colorNames=['red','yellow','green','blue','purple','orange','pink','aqua']
     const [leavingGroup,setLeavingGroup]=useState(<></>)
     function buildMyColors(){
-        const promise=getHabits(token)
-        promise.then(res=>{
-            const habits_Groups=[...res.data,...myGroups]
-            console.log(habits_Groups)
-            const colors=[]
-            for (let item of habits_Groups){
-            if(!colors.includes(item.color))colors.push(item.color)
-        }
-        setMyColors(colors)
+        const promise1=getHabits(token)
+        promise1.then(res1=>{
+            const promise2=getEvents(token)
+            promise2.then(res2=>{
+                const habits=[...res1.data,...res2.data]
+                const colors=[]
+                for (let item of habits)if(!colors.includes(item.color))colors.push(item.color)
+                setMyColors(colors)
+            })
+            promise2.catch((e)=>{console.log(e)})
         })
-        
+        promise1.catch((e)=>{console.log(e)})
     }
     function getAllows(){
         const promise=findAllows(groupId,token)

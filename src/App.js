@@ -18,7 +18,6 @@ const App = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [token, setToken] = useState(JSON.parse(localStorage.getItem("token")));
   const [preferences,setPreferences]=useState(JSON.parse(localStorage.getItem("preferences"))||{with_sab_dom:false,scale:1000})
-  const [myGroups,setMyGroups]=useState([])
   const [members,setMembers]=useState([])
   const [chosen,setChosen]=useState([])
   const [popUp,setPopUp]=useState('')
@@ -27,7 +26,7 @@ const App = () => {
   return (
 
     <TokenContext.Provider value={{ token, setToken }}>
-      <UserContext.Provider value={{ user, setUser ,preferences,setPreferences,myGroups,setMyGroups}}>
+      <UserContext.Provider value={{ user, setUser ,preferences,setPreferences}}>
         <IconContext.Provider value={{ className: "react-icons" }}>
           <GroupContext.Provider value={{group,setGroup, popUp,setPopUp,members, setMembers,chosen,setChosen}}>
             <Router>

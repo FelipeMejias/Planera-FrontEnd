@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { AiFillSetting, AiOutlineArrowLeft, AiOutlineCalendar, AiOutlineFileAdd, AiOutlineMenu } from "react-icons/ai";
 
 import TokenContext from '../contexts/TokenContext'
-import { findGroupHabits, getHabits } from '../api'
+import { findGroupHabits, getHabits } from '../utils/api'
 import Board from '../components/Board'
 import HabitDetails from '../components/HabitDetails';
 import CreateHabit from '../components/CreateHabit';
@@ -14,11 +14,12 @@ import PlanerContext from '../contexts/PlanerContext';
 import Modal from '../components/Modal';
 import UserContext from '../contexts/UserContext';
 import GroupContext from '../contexts/GroupContext';
+import OnGroupDetails from '../components/OnGroupDetails';
 	
 export default function GroupBoardPage(){
     const {token} = useContext(TokenContext)
     const {preferences}=useContext(UserContext)
-    const {chosen,members,popUp,setPopUp,group}=useContext(GroupContext)
+    const {chosen,members,popUp,setPopUp}=useContext(GroupContext)
 
     const navigate=useNavigate()
     const [details,setDetails]=useState({})
@@ -72,7 +73,7 @@ export default function GroupBoardPage(){
     },[])
     return(
         <Content>
-            {popUp==='detailing'?<HabitDetails setDetails={setDetails} details={details}/>:<></>}
+            {popUp==='detailing'?<OnGroupDetails setDetails={setDetails} details={details}/>:<></>}
             {popUp==='prefering'?<Preferences findHabits={findHabits} setPopUp={setPopUp}/>:<></>}
             <Header>
                 <Button onClick={()=>navigate(`/group/${groupId}`)}><AiOutlineArrowLeft/></Button>

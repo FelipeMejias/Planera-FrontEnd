@@ -8,21 +8,13 @@ import { deleteHabit, putHabit } from '../utils/api'
 import TokenContext from '../contexts/TokenContext'
 import PlanerContext from '../contexts/PlanerContext';
 import Modal from './Modal';
+import GroupContext from '../contexts/GroupContext';
     
-export default function HabitDetails({details,setDetails}){
-    const {id,title,begin,end,day,color}=details
+export default function OnGroupDetails({details,setDetails}){
+    const {id:eventId,title,begin,end,day,color,tag}=details
     const {token} = useContext(TokenContext)
-    const {setPopUp,findHabits,popUp} = useContext(PlanerContext)
-    const [coloring,setColoring]=useState(false)
-    function changeColor(color){
-        const promise=putHabit(id,{color},token)
-        promise.then(()=>{
-            setDetails({...details,color})
-            findHabits()
-            setColoring(false)
-        })
-        promise.catch((e)=>{console.log(e)})
-    }
+    const {setPopUp,popUp} = useContext(GroupContext)
+    
     function eraseHabit(){
         const promise=deleteHabit(id,token)
         promise.then(()=>{
@@ -32,13 +24,9 @@ export default function HabitDetails({details,setDetails}){
         })
         promise.catch((e)=>{console.log(e)})
     }
-    const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0']
-    const colorNames=['red','yellow','green','blue','purple']
+    const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0','#fca50f','#f45ace','#53ceed']
+    const colorNames=['red','yellow','green','blue','purple','orange','pink','aqua']
     const dayNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
-
-    const colorList=<ul>{colorCodes.map((color,i)=>(
-        <ChoseColor onClick={()=>changeColor(colorNames[i])} color={color} position={i*3}/>
-    ))}</ul>
 
     return(
         
@@ -47,8 +35,8 @@ export default function HabitDetails({details,setDetails}){
             <span>
                 <ul>
                     <div className='corpessoa'>
-                        {!coloring?<ColorBall onClick={()=>{setColoring(true)}} color={colorCodes[colorNames.indexOf(color)]} />:colorList}
-                        <h1>{title}</h1>
+                        <ColorBall  color={colorCodes[colorNames.indexOf(color)]} />
+                        <h1>{tag||title}</h1>
                     </div>
                     <Button color='black' onClick={()=>setPopUp('')}><AiOutlineClose/></Button>
                 </ul>
@@ -94,11 +82,8 @@ font-size:23px;border:0;
 display:flex;align-items:center;
 color:${props=>props.color};
 `
-const ColorBall=styled.button`width:22px;height:22px;border-radius:50%;
+const ColorBall=styled.div`width:22px;height:22px;border-radius:50%;
 border:0.3vh solid black;margin-right:1vh;
 background-color:${props=>props.color}
 `
-const ChoseColor=styled.button`width:22px;height:22px;border-radius:50%;
-border:0.3vh solid black;margin-right:1vh;
-background-color:${props=>props.color}
-`
+

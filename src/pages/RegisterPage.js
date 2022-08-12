@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
-import { signUp } from '../api';
+import { signUp } from '../utils/api';
 import UserContext from '../contexts/UserContext';
 
     

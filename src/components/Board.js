@@ -1,12 +1,13 @@
 import { useState,useEffect, useContext } from "react"
 import styled from 'styled-components'
 import UserContext from "../contexts/UserContext"
+import { buildHashList } from "../utils/boardUtils"
 
 export default function Board({inGroup,now,habits,setDetails,setPopUp}){
     const [daysData,setDaysData]=useState([])
     const {preferences}=useContext(UserContext)
     const {with_sab_dom,scale}=preferences
-    
+
     const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0','#fca50f','#f45ace','#53ceed']
     const colorNames=['red','yellow','green','blue','purple','orange','pink','aqua']
 
@@ -19,37 +20,12 @@ export default function Board({inGroup,now,habits,setDetails,setPopUp}){
         }))
         days=days.filter((day)=>(!with_sab_dom?day.name!=='DOM'&&day.name!=='SAB':true))
         setDaysData(days)
-    }
-    
 
-    function define_width_position(obj,list){
-        let width='92';let position='';let c=false
-        for(let k=0;k<list.length;k++){
-            const j=list[k]
-            if(j.floor<obj.floor && obj.floor<j.floor+j.size){
-                let e=false
-                for(let p=0;p<list.length;p++){
-                    const v=list[p]
-                    if((v.floor<j.size && j.floor<v.floor+v.size)||(j.floor===v.floor && j.size>v.size)){
-                        width='44.2';position='left:4%';e=true
-                    }
-                }
-                if(e){break}
-                width='44.2';position='right:4%';c=true
-            }
-            if(j.floor===obj.floor){
-                if(obj.size>j.size){width='44.2';position='right:4%';c=true}
-                if(obj.size<j.size){width='44.2';position='left:4%'}
-            }
-        }
-        for(let k=0;k<list.length;k++){
-            if(c){break}
-            const j=list[k]
-            if(j.floor>obj.floor && obj.floor+obj.size>j.floor){width='44.2';position='left:4%'}
-        }
-        return {width,position}
     }
-    const days=daysData.map((day,index)=>(
+    const days=daysData.map((day,index)=>{
+        const hashList=buildHashList(day.content)
+
+        return(
             <Day scale={scale}>
 
                 {index===(with_sab_dom?now.day:now.day-1)?<NowIndicator level={now.level*4.16}></NowIndicator>:<></>}
@@ -58,10 +34,9 @@ export default function Board({inGroup,now,habits,setDetails,setPopUp}){
                 {index===(with_sab_dom?6:4)?hours.map(i=>(<Hours level={i*4.16-0.8} side={true}><span>{i}</span></Hours>)):<></>}
 
                 <p>{day.name}</p>
-
-                {day.content.map(habit=>{
+                {day.content.map((habit,i)=>{
                     const {floor,size,color,title,tag}=habit
-                    const {width,position}=define_width_position(habit,day.content)
+                    const {width,position}=hashList[i]
                     return(
                     <Habit width={width} position={position} level={floor*0.0416} size={size*0.0416} color={colorCodes[colorNames.indexOf(color)]} 
                         onClick={()=>{setPopUp('detailing');setDetails(habit)}} >
@@ -69,7 +44,7 @@ export default function Board({inGroup,now,habits,setDetails,setPopUp}){
                     </Habit>
                 )})}
             </Day>)
-        )
+    })
     useEffect(separateHabits,[habits,preferences])
     return (
         <Content className="board">

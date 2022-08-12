@@ -8,7 +8,7 @@ import TokenContext from '../contexts/TokenContext'
 
 import Board from '../components/Board'
 import UserContext from '../contexts/UserContext';
-import { changeGroupColor, getGroup, sendEnvitation } from '../api';
+import { changeGroupColor, getGroup, sendEnvitation } from '../utils/api';
 import GroupContext from '../contexts/GroupContext';
 import ChooseAllows from '../components/ChoseAllows';
 import AddMember from '../components/AddMember';

@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import { useContext, useEffect, useState } from 'react';
 import TokenContext from "../contexts/TokenContext.js";
 import UserContext from "../contexts/UserContext.js";
-import { aceptInvitation, getEnvitation, getGroups, postGroup, rejectInvitation } from '../api.js';
+import { aceptInvitation, getEnvitation, getGroups, postGroup, rejectInvitation } from '../utils/api.js';
 import Modal from '../components/Modal.js';
 import { AiFillFolderAdd, AiOutlineBackward, AiOutlineClear, AiOutlineClose, AiOutlineCloseCircle, AiOutlineFolderAdd, AiOutlineGroup, AiOutlineMore, AiOutlinePlus, AiOutlinePlusSquare, AiOutlineRollback, AiOutlineUngroup, AiOutlineUsergroupAdd, AiTwotoneFolderAdd } from 'react-icons/ai';
 import GroupContext from '../contexts/GroupContext.js';
@@ -14,12 +14,17 @@ import GroupContext from '../contexts/GroupContext.js';
 export default function MenuPage(){
   const navigate=useNavigate()
   const {setToken,token}=useContext(TokenContext)
-  const {setUser,myGroups,setMyGroups}=useContext(UserContext)
+  const {setUser}=useContext(UserContext)
   const {setGroup}=useContext(GroupContext)
+  const [myGroups,setMyGroups]=useState([])
   const [name,setName]=useState('')
   const [creatingGroup,setCreatingGroup]=useState(false)
   const [error,setError]=useState('')
   const [invitation,setInvitation]=useState(<></>)
+
+  const colorCodes=['#fca50f','#f45ace','#53ceed']
+  const colorNames=['orange','pink','aqua']
+
   function logOut(){
     navigate('/signin')
         localStorage.removeItem("user")
@@ -75,7 +80,7 @@ export default function MenuPage(){
           <Button color='#6B491A' onClick={()=>navigate('/')}><h1>Agenda</h1></Button>
           <span><h5>grupos</h5><ButtonIcon color='#6B491A' onClick={()=>setCreatingGroup(true)}><AiOutlinePlus/></ButtonIcon></span>
             {myGroups.map((group)=>(
-              <Button className='groupButton' color={group.color} onClick={()=>{
+              <Button className='groupButton' color={colorCodes[colorNames.indexOf(group.color)]} onClick={()=>{
                 setGroup({color:group.color})
                 navigate(`/group/${group.id}`)
               }}><h1>{group.name}</h1></Button>

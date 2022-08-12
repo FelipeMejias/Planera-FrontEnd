@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TokenContext from '../contexts/TokenContext';
-import { postHabit, putHabit } from '../api';
+import { postHabit, putHabit } from '../utils/api';
 import PlanerContext from '../contexts/PlanerContext';
 	
     

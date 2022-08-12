@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { AiFillHome, AiFillSetting, AiOutlineCalendar, AiOutlineFileAdd, AiOutlineMenu } from "react-icons/ai";
 
 import TokenContext from '../contexts/TokenContext'
-import { getEvents, getHabits } from '../api'
+import { getEvents, getHabits } from '../utils/api'
 import Board from '../components/Board'
 import HabitDetails from '../components/HabitDetails';
 import CreateHabit from '../components/CreateHabit';

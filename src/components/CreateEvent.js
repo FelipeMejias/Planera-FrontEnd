@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TokenContext from '../contexts/TokenContext';
-import { postEvent, putHabit } from '../api';
+import { postEvent, putHabit } from '../utils/api';
 import PlanerContext from '../contexts/PlanerContext';
 import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineCheckCircle, AiOutlineClockCircle, AiOutlineSave } from 'react-icons/ai';
 import GroupContext from '../contexts/GroupContext';

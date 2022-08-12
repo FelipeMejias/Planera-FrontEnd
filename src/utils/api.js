@@ -55,6 +55,9 @@ export const sendEnvitation = async (invitationData,id,token)=> {
 export const getEnvitation = async (token)=> {
   return api.get(`/userGroup`, buildHeader(token));
 }
+export const getPendent = async (groupId,token)=> {
+  return api.get(`/userGroup/${groupId}`, buildHeader(token));
+}
 export const aceptInvitation = async (id,token)=> {
   return api.put(`/userGroup/${id}/acept`,{}, buildHeader(token));
 }

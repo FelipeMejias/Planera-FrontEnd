@@ -6,9 +6,13 @@ export default function Board({inGroup,now,habits,setDetails,setPopUp}){
     const [daysData,setDaysData]=useState([])
     const {preferences}=useContext(UserContext)
     const {with_sab_dom,scale}=preferences
-    const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0']
-    const colorNames=['red','yellow','green','blue','purple']
+    
+    const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0','#fca50f','#f45ace','#53ceed']
+    const colorNames=['red','yellow','green','blue','purple','orange','pink','aqua']
+
     const daysNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
+    const hours=[];for(let i=1;i<24;i++){hours.push(i)}
+
     function separateHabits(){
         let days=daysNames.map((name,index)=>({
             name,content:habits.filter((habit)=>habit.day===index)
@@ -16,8 +20,7 @@ export default function Board({inGroup,now,habits,setDetails,setPopUp}){
         days=days.filter((day)=>(!with_sab_dom?day.name!=='DOM'&&day.name!=='SAB':true))
         setDaysData(days)
     }
-    const hours=[]
-    for(let i=1;i<24;i++){hours.push(i)}
+    
 
     function define_width_position(obj,list){
         let width='92';let position='';let c=false
@@ -96,8 +99,8 @@ position:absolute;top:${props=>props.level}%;z-index:1;left:0;
 span{color:#6b491a;position:absolute;top:3px;font-size:8px}
 `
 
-const Habit=styled.div`
-box-shadow: -1.5px 1.5px 1.5px rgba(0, 0, 0, 0.15);
+const Habit=styled.button`
+box-shadow: -1.5px 1.5px 1.5px rgba(0, 0, 0, 0.15);border:0;
     width:${props=>props.width}%;height:${props=>props.size}%;background-color:${props=>props.color};
     border-radius:7px;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -146,4 +149,5 @@ ul{display:flex;width:100%}
 ::-webkit-scrollbar {
     width: 0px;
   }
+button{cursor:pointer}
 `

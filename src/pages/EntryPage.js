@@ -39,8 +39,8 @@ export default function EntryPage(){
         <Tela>
           <h6>PlanerA</h6>
             <form onSubmit={logIn}>
-              <input value={name} onChange={e=>setName(e.target.value)}  placeholder='seu nome...'></input>
-              <input type='password' value={password} onChange={e=>setPassword(e.target.value)}  placeholder='sua senha...'></input>
+              <input value={name} onChange={e=>setName(e.target.value)}  placeholder='nome...'></input>
+              <input type='password' value={password} onChange={e=>setPassword(e.target.value)}  placeholder='senha...'></input>
               <button type='submit'>Entrar</button>
               <Alert>{errorMsg}</Alert>
             </form>
@@ -48,7 +48,7 @@ export default function EntryPage(){
               Criar conta
             </Button>
             <Button onClick={()=>navigate('/menu')}>
-              Entrar como visitante
+              Visitar site
             </Button>
         </Tela>
     )
@@ -67,7 +67,7 @@ align-items: center;
 button{width:42vw;height:70px;background-color:#6B491A;margin-top:40px;
   display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;
   border:0;border-radius:10px;
-  color:white;font-size:25px;
+  color:white;font-size:25px;cursor:pointer
 }
 input{padding-left:13px;width:100%;height:50px;background-color:#6B491A;margin-top:40px;
   color:white;font-size:25px;border:0;border-radius:5px}

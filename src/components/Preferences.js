@@ -34,13 +34,16 @@ export default function Preferences({findHabits,setPopUp}){
         </Content>             
     )
 }
-const Button=styled.div`border:0;background-color:white;font-size:25px;
+const Button=styled.button`border:0;background-color:white;font-size:25px;
 position:absolute;top:5px;right:10px
 `
-const Choice=styled.div`border-radius:10px;font-size:15px;height:35px;color:white;width:30%;border:0;
+const Choice=styled.button`
+width:48%;border-radius:10px;font-size:15px;height:40px;
+    color:white;
+
+border-radius:10px;font-size:15px;height:35px;border:0;
 display:flex;justify-content:center;align-items:center;margin:5px;
-background-color:${props=>props.selected?'blue':'gray'};
-@media(max-width:900px){width:35px}
+background-color:${props=>props.selected?'#6B491A':'gray'};
 `
 
 const Content=styled.div`
@@ -55,8 +58,6 @@ display:flex;padding:10px;box-sizing:border-box;width:17vw;
     border-radius: 1.5vh;
     border:1.5px solid black;
     height:20vh;
-    button{width:48%;border-radius:10px;font-size:15px;height:40px;
-        background-color:#6B491A;color:white;border:0}
     ul{
         display:flex;justify-content:center;align-items:center;
         
@@ -66,4 +67,5 @@ display:flex;padding:10px;box-sizing:border-box;width:17vw;
         position:fixed;top:calc(17vh - 30px);z-index:10;width:60vw;left:20vw;height:40vh;min-height:240px
     
     }
+    button{cursor:pointer}
 `

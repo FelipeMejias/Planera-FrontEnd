@@ -18,7 +18,7 @@ import GroupContext from '../contexts/GroupContext';
 export default function GroupBoardPage(){
     const {token} = useContext(TokenContext)
     const {preferences}=useContext(UserContext)
-    const {chosen,members,popUp,setPopUp}=useContext(GroupContext)
+    const {chosen,members,popUp,setPopUp,group}=useContext(GroupContext)
 
     const navigate=useNavigate()
     const [details,setDetails]=useState({})
@@ -49,8 +49,8 @@ export default function GroupBoardPage(){
     }
     function definePageName(){
         const len=chosen.length
-        if(len===members.length)return 'Todos'
-        if(len!==1)return `${len} integrantes`
+        if(len===members.length)return 'todos os membros'
+        if(len!==1)return `${len} membros`
         for(let part of members)if(part.id===chosen[0])return `${part.name}`
     }
     function findIndex_scrollBoard(habits,size){
@@ -74,19 +74,22 @@ export default function GroupBoardPage(){
         <Content>
             {popUp==='detailing'?<HabitDetails setDetails={setDetails} details={details}/>:<></>}
             {popUp==='prefering'?<Preferences findHabits={findHabits} setPopUp={setPopUp}/>:<></>}
-            <div className='orgAgenda'>
-                <span className='buttonGB'>
-                    <Button onClick={()=>navigate(`/group/${groupId}`)}><AiOutlineArrowLeft/></Button>
-                    <h1>{definePageName()}</h1>
-                    <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
-                </span>
-            </div>
+            <Header>
+                <Button onClick={()=>navigate(`/group/${groupId}`)}><AiOutlineArrowLeft/></Button>
+                <h1>{definePageName()}</h1>
+                <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
+            </Header>
             <div className='orgAgenda2'>
                 <Board inGroup={true} now={now} habits={habits} setDetails={setDetails}  setPopUp={setPopUp}/>
             </div>
         </Content>
     )
 }
+const Header=styled.section`
+h1{font-size:27px;color:#6b491a}
+display:flex;align-items:center;justify-content:space-between;
+    height:10vh;width:96vw;display:flex;margin:0 0 10px 0;
+`
 
 const Button=styled.button`display:flex;justify-content:center;align-items:center;
 width:7vh;height:7vh;border-radius:10px;position:relative;
@@ -108,6 +111,7 @@ align-items: center;
 .buttonGB{display:flex;
     width:96vw;height:7vh;justify-content:space-between;align-items:center;}
 }
+button{cursor:pointer}
 @media(max-width:900px){
     flex-direction:column;justify-content:flex-start;align-items:center;
     .orgAgenda{height:10vh;width:96vw;display:flex;flex-direction:row;margin:0 0 10px 0;}

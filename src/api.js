@@ -76,6 +76,16 @@ export const findAllows = async (id,token)=> {
 }
 
 
+
+export const postEvent = async (eventData,groupId,token)=> {
+  return api.post(`/event/${groupId}`,eventData, buildHeader(token));
+}
+
+export const getEvents = async (token)=> {
+  return api.get(`/event`, buildHeader(token));
+}
+
+
 export const desactivateToken = async (token) => {
   await api.patch(
     "/sessions",

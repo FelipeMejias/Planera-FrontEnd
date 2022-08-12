@@ -56,6 +56,7 @@ const Content = styled.div`
         font-size: 18px;
         line-height: 22px;
     }
+    button{cursor:pointer}
 `;
 
 const ButtonNo = styled.button`

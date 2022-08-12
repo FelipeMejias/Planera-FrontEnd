@@ -75,7 +75,7 @@ export default function MenuPage(){
           <Button color='#6B491A' onClick={()=>navigate('/')}><h1>Agenda</h1></Button>
           <span><h5>grupos</h5><ButtonIcon color='#6B491A' onClick={()=>setCreatingGroup(true)}><AiOutlinePlus/></ButtonIcon></span>
             {myGroups.map((group)=>(
-              <Button color={group.color} onClick={()=>{
+              <Button className='groupButton' color={group.color} onClick={()=>{
                 setGroup({color:group.color})
                 navigate(`/group/${group.id}`)
               }}><h1>{group.name}</h1></Button>
@@ -112,7 +112,9 @@ background-color: #CC9139;
 display: flex;flex-direction:column;
 align-items: center;
 .logOut{position:absolute;bottom:30px;}
+.groupButton{color:black}
 span{display:flex;justify-content:space-between;align-items:center}
+button{cursor:pointer}
 `
 const ButtonIcon=styled.button`display:flex;justify-content:center;
 width:35px;height:35px;border-radius:50%;position:relative;

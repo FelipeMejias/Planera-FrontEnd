@@ -47,7 +47,7 @@ export default function CreateHabit({create,details}){
                 ))}
             </ul>
             
-            <div className='organiza'>
+            <Form>
                 <div>
                     <input type='number' onChange={(e)=>setBegin(e.target.value)} placeholder='horário início' value={begin}></input>
                     <input type='number' onChange={(e)=>setEnd(e.target.value)} placeholder='horário final' value={end}></input>            
@@ -59,14 +59,22 @@ export default function CreateHabit({create,details}){
                         <button onClick={saveHabit}>Salvar</button>
                     </span>
                 </div>
-            </div>
+            </Form>
         </Content>
     )
 }
 const DayButton=styled.button`border-radius:50%;font-size:13px;
 height:40px;color:white;width:40px;border:0;
 background-color:${props=>props.selected?'blue':'gray'};margin-right:3px;margin-bottom:3px;
-
+`
+const Form=styled.div`
+display:flex;flex-direction:row;justify-content:space-evenly;
+button{max-width:100px;width:24vw;border-radius:10px;font-size:15px;height:35px;margin:10px 0 10px 0;
+    background-color:blue;color:white;border:0;margin-right:5px}
+    .canc{background-color:brown;width:35px;margin-right:25px}
+    input{height:28px;width:92%;font-size:18px;margin:10px 0 10px 0;padding-left:6px}
+    div{display:flex;flex-direction:column}
+    span{display:flex}
 `
 const Content=styled.div`min-height:190px;
 position:fixed;z-index:10;width:90vw;height:30vh;top:8vh;left:20vw;
@@ -76,20 +84,13 @@ display:flex;padding:10px;box-sizing:border-box;flex-direction:column;
     justify-content:space-evenly;
     border-radius: 1.5vh;
     border:0.3vh solid black;
-    div{display:flex;flex-direction:column}
-span{display:flex}
-input{height:28px;width:92%;font-size:18px;margin:10px 0 10px 0;padding-left:6px}
-.organiza button{max-width:100px;width:24vw;border-radius:10px;font-size:15px;height:35px;margin:10px 0 10px 0;
-    background-color:blue;color:white;border:0;margin-right:5px}
-    .organiza .canc{background-color:brown;width:35px;margin-right:25px}
     ul{
         display:flex;justify-content:space-between;align-items:center;
-    
     }.sabdom{width:38%}
-    .organiza{display:flex;flex-direction:row;justify-content:space-evenly;}
     @media(max-width:900px){
         position:fixed;top:18vh;z-index:6;width:90vw;left:5vw;
     }
+    button{cursor:pointer}
 `
 
     

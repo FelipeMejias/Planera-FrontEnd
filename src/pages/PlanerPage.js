@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { AiFillHome, AiFillSetting, AiOutlineCalendar, AiOutlineFileAdd, AiOutlineMenu } from "react-icons/ai";
 
 import TokenContext from '../contexts/TokenContext'
-import { getHabits } from '../api'
+import { getEvents, getHabits } from '../api'
 import Board from '../components/Board'
 import HabitDetails from '../components/HabitDetails';
 import CreateHabit from '../components/CreateHabit';
@@ -32,17 +32,20 @@ export default function PlanerPage(){
     const [now,setNow]=useState({day:null,scrollIndex:null})
 
     function findHabits(scroll,size=preferences.size){
-        const promise=getHabits(token)
-        promise.then((res)=>{
-            const habits=res.data
-            setMyHabits(habits)
-            console.log(habits)
-            if(scroll){
-                scrollBoard(scroll,size) 
-            }else{
-            findIndex_scrollBoard(habits,size)}
+        const promise1=getHabits(token)
+        promise1.then(res1=>{
+            const promise2=getEvents(token)
+            promise2.then(res2=>{
+                const habits=[...res1.data,...res2.data]
+                setMyHabits(habits)
+                if(scroll){
+                    scrollBoard(scroll,size) 
+                }else{
+                findIndex_scrollBoard(habits,size)}
+            })
+            promise2.catch((e)=>{console.log(e)})
         })
-        promise.catch((e)=>{console.log(e)})
+        promise1.catch((e)=>{console.log(e)})
     }
     function findIndex_scrollBoard(habits,size){
         let earlierHabit=Infinity
@@ -113,4 +116,6 @@ display: flex;justify-content:center;
 align-items: center;
 @media(max-width:900px){
     flex-direction:column;justify-content:flex-start;align-items:center;
-}`
+}
+button{cursor:pointer}
+`

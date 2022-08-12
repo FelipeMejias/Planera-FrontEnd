@@ -81,7 +81,7 @@ p{font-size:22px;margin:5px 0  0;
 strong{font-weight:700;font-size:20px;}}
 input{height:28px;width:97%;font-size:20px;margin-top:1vh;margin-bottom:1vh;}
 .orgDetalhesEvento{display:flex}
-ul{display:flex;align-items:center;width:100%;justify-content:space-between}
+ul{display:flex;align-items:center;justify-content:space-between}
 @media(max-width:900px){
     position:fixed;top:18vh;z-index:6;width:90vw;left:5vw;height:220px
 }
@@ -94,11 +94,11 @@ font-size:23px;border:0;
 display:flex;align-items:center;
 color:${props=>props.color};
 `
-const ColorBall=styled.div`width:22px;height:22px;border-radius:50%;
+const ColorBall=styled.button`width:22px;height:22px;border-radius:50%;
 border:0.3vh solid black;margin-right:1vh;
 background-color:${props=>props.color}
 `
-const ChoseColor=styled.div`width:22px;height:22px;border-radius:50%;
+const ChoseColor=styled.button`width:22px;height:22px;border-radius:50%;
 border:0.3vh solid black;margin-right:1vh;
 background-color:${props=>props.color}
 `

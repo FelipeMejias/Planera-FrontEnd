@@ -57,6 +57,7 @@ export default function ChooseAllows({setFace,groupId}){
     function leaveGroup(){
         const promise=exitGroup(groupId,token)
         promise.then(()=>{
+            setFace('main')
             setLeavingGroup(<></>)
             navigate('/menu')
         })
@@ -76,7 +77,7 @@ export default function ChooseAllows({setFace,groupId}){
             <>
                 <Header>
                     <ButtonIcon onClick={()=>setFace('main')}><AiOutlineArrowLeft /></ButtonIcon>
-                    <h2>{group.name}</h2>
+                    <h1>configurações em {group.name}</h1>
                 </Header>
                     {myColors.map((color,i)=>{
                         let colorAllow=false
@@ -144,8 +145,8 @@ const ColorSquare=styled.div`
     `
 
 const Header=styled.section`
-    height:10vh;width:96vw;display:flex;
-        span{display:flex;width:96vw;height:7vh;justify-content:space-between;align-items:center;}
+h1{font-size:27px;color:#6b491a}
+    height:10vh;width:96vw;display:flex;align-items:center;
     `
     const ButtonIcon=styled.button`
     width:50px;height:50px;border-radius:10px;position:relative;

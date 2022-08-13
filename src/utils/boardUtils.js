@@ -16,7 +16,7 @@ export function buildHashList(list){
         }
         if(k!==0){
             if(past.floor+past.size<=current.floor){
-                raw.push(null)
+                c=false
             }else if(past.floor+past.size<=current.floor+current.size){
                 raw.push(c)
                 c=!c
@@ -27,7 +27,8 @@ export function buildHashList(list){
         }
         if(k===list.length-1){raw.push(null);continue;}
         if(current.floor+current.size<=next.floor){
-            raw.push(null)
+            c=!c
+            raw.push(c)
         }else if(current.floor+current.size<=next.floor+next.size){
             raw.push(c)
             c=!c

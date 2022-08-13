@@ -43,7 +43,7 @@ export default function GroupBoardPage(){
             if(scroll){
                 scrollBoard(scroll,size) 
             }else{
-            findIndex_scrollBoard(habits,size)}
+                findIndex_scrollBoard(habits,size)}
         })
         promise.catch((e)=>{console.log(e)})
         
@@ -73,7 +73,7 @@ export default function GroupBoardPage(){
     },[])
     return(
         <Content>
-            {popUp==='detailing'?<OnGroupDetails setDetails={setDetails} details={details}/>:<></>}
+            {popUp==='detailing'?<OnGroupDetails setDetails={setDetails} details={details} />:<></>}
             {popUp==='prefering'?<Preferences findHabits={findHabits} setPopUp={setPopUp}/>:<></>}
             <Header>
                 <Button onClick={()=>navigate(`/group/${groupId}`)}><AiOutlineArrowLeft/></Button>

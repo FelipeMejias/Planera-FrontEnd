@@ -3,57 +3,81 @@ import {  useState } from 'react'
 import { useContext } from 'react';
 
 
-import {  AiOutlineClose,  AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { deleteHabit, putHabit } from '../utils/api'
+import {  AiOutlineArrowLeft, AiOutlineClose,  AiOutlineContacts,  AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { deleteHabit, findEventParticipants, putHabit } from '../utils/api'
 import TokenContext from '../contexts/TokenContext'
 import PlanerContext from '../contexts/PlanerContext';
 import Modal from './Modal';
 import GroupContext from '../contexts/GroupContext';
     
 export default function OnGroupDetails({details,setDetails}){
-    const {id:eventId,title,begin,end,day,color,tag}=details
+    const {id,title,begin,end,day,color,tag,groupId}=details
     const {token} = useContext(TokenContext)
-    const {setPopUp,popUp} = useContext(GroupContext)
-    
-    function eraseHabit(){
-        const promise=deleteHabit(id,token)
-        promise.then(()=>{
-            setDetails({})
-            setPopUp('')
-            findHabits()
-        })
-        promise.catch((e)=>{console.log(e)})
-    }
+    const {setPopUp} = useContext(GroupContext)
+    const [showing,setShowing]=useState(false)
+    const [participants,setParticipants]=useState([])
     const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0','#fca50f','#f45ace','#53ceed']
     const colorNames=['red','yellow','green','blue','purple','orange','pink','aqua']
     const dayNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
+    
+    function showParticipants(){
+        const promise=findEventParticipants(id,token)
+        promise.then(res=>{
+            const {data}=res
+            let string=''
+            for(let k=0;k<data.length;k++){
+                if(k!==data.length-1){
+                    string+=`${data[k]}, `
+                }else{
+                    string+=`${data[k]}.`
+                }
+            }
+            setParticipants(string)
+        })
+        promise.catch((e)=>{console.log(e)})
+    }
 
     return(
-        
         <Content>
-        {popUp==='deleting'?<Modal buttons={true} text={`deletar ${title} ?`} functionYes={()=>eraseHabit()} functionNo={()=>setPopUp('detailing')} />:<></>}
-            <span>
-                <ul>
+            {showing?
+                <Container>
                     <div className='corpessoa'>
-                        <ColorBall  color={colorCodes[colorNames.indexOf(color)]} />
-                        <h1>{tag||title}</h1>
+                        <Button color='black' onClick={()=>setShowing(false)}><AiOutlineArrowLeft/></Button>
+                        <p>participantes:</p>
                     </div>
-                    <Button color='black' onClick={()=>setPopUp('')}><AiOutlineClose/></Button>
-                </ul>
-                <div>
-                    <p>{begin} ~ {end}</p>
-                    <p>{dayNames[day]}</p>
-                </div>
-            </span>
-            <span>
-                <ul>
-                    <Button color='red' onClick={()=>setPopUp('deleting')}><AiOutlineDelete/></Button>
-                    <Button color='orange' onClick={()=>setPopUp('editing')}><AiOutlineEdit/></Button>
-                </ul>
-            </span>
+                    <p>{participants}</p>
+                </Container>
+            :
+                <Container>
+                    <span>
+                        <ul>
+                            <div className='corpessoa'>
+                                <ColorBall  color={colorCodes[colorNames.indexOf(color)]} />
+                                <h1>{tag||title}</h1>
+                            </div>
+                            <Button color='black' onClick={()=>{setPopUp('');setDetails({})}}><AiOutlineClose/></Button>
+                        </ul>
+                        <div>
+                            <p>{begin} ~ {end}</p>
+                            <p>{dayNames[day]}</p>
+                        </div>
+                    </span>
+                    <span>
+                        {groupId?
+                            <ul>
+                                <Button color='blue' onClick={()=>{setShowing(true);showParticipants()}}><AiOutlineContacts/></Button>
+                            </ul>
+                        :<></>}
+                    </span>
+                </Container>
+            }
         </Content>
     )
 }
+const Container=styled.div`
+display:flex;flex-direction:column;
+`
+
 const Content=styled.div`.corpessoa{display:flex}
 display:flex;padding:10px;box-sizing:border-box;
 width:90vw;position:fixed;max-width:500px;

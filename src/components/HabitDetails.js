@@ -3,17 +3,40 @@ import {  useState } from 'react'
 import { useContext } from 'react';
 
 
-import {  AiOutlineClose,  AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { deleteHabit, putHabit } from '../utils/api'
+import {  AiOutlineArrowLeft, AiOutlineClose,  AiOutlineContacts,  AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { deleteHabit, findEventParticipants, putHabit } from '../utils/api'
 import TokenContext from '../contexts/TokenContext'
 import PlanerContext from '../contexts/PlanerContext';
 import Modal from './Modal';
     
 export default function HabitDetails({details,setDetails}){
-    const {id,title,begin,end,day,color}=details
+    const {groupId,id,title,begin,end,day,color}=details
     const {token} = useContext(TokenContext)
     const {setPopUp,findHabits,popUp} = useContext(PlanerContext)
     const [coloring,setColoring]=useState(false)
+    const [showing,setShowing]=useState(false)
+    const [participants,setParticipants]=useState([])
+    const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0']
+    const colorNames=['red','yellow','green','blue','purple']
+    const dayNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
+    const colorCodes2=['#fca50f','#f45ace','#53ceed']
+    const colorNames2=['orange','pink','aqua']
+    function showParticipants(){
+        const promise=findEventParticipants(id,token)
+        promise.then(res=>{
+            const {data}=res
+            let string=''
+            for(let k=0;k<data.length;k++){
+                if(k!==data.length-1){
+                    string+=`${data[k]}, `
+                }else{
+                    string+=`${data[k]}.`
+                }
+            }
+            setParticipants(string)
+        })
+        promise.catch((e)=>{console.log(e)})
+    }
     function changeColor(color){
         const promise=putHabit(id,{color},token)
         promise.then(()=>{
@@ -32,10 +55,7 @@ export default function HabitDetails({details,setDetails}){
         })
         promise.catch((e)=>{console.log(e)})
     }
-    const colorCodes=['#f7a471','#e8d361','#67e57e','#719ef7','#d3a1e0']
-    const colorNames=['red','yellow','green','blue','purple']
-    const dayNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
-
+    
     const colorList=<ul>{colorCodes.map((color,i)=>(
         <ChoseColor onClick={()=>changeColor(colorNames[i])} color={color} position={i*3}/>
     ))}</ul>
@@ -44,10 +64,20 @@ export default function HabitDetails({details,setDetails}){
         
         <Content>
         {popUp==='deleting'?<Modal buttons={true} text={`deletar ${title} ?`} functionYes={()=>eraseHabit()} functionNo={()=>setPopUp('detailing')} />:<></>}
+        {showing?
+        <Container>
+            <div className='corpessoa'>
+                <Button color='black' onClick={()=>setShowing(false)}><AiOutlineArrowLeft/></Button>
+                <p>participantes:</p>
+            </div>
+            <p>{participants}</p>
+        </Container>
+        :
+            <Container>
             <span>
                 <ul>
                     <div className='corpessoa'>
-                        {!coloring?<ColorBall onClick={()=>{setColoring(true)}} color={colorCodes[colorNames.indexOf(color)]} />:colorList}
+                        {!coloring?<ColorBall onClick={()=>{if(!groupId)setColoring(true)}} color={colorCodes[colorNames.indexOf(color)]||colorCodes2[colorNames2.indexOf(color)]} />:colorList}
                         <h1>{title}</h1>
                     </div>
                     <Button color='black' onClick={()=>setPopUp('')}><AiOutlineClose/></Button>
@@ -58,14 +88,25 @@ export default function HabitDetails({details,setDetails}){
                 </div>
             </span>
             <span>
+                {groupId?
+                    <ul>
+                    <Button color='blue' onClick={()=>{setShowing(true);showParticipants()}}><AiOutlineContacts/></Button>
+                </ul>
+                :
                 <ul>
                     <Button color='red' onClick={()=>setPopUp('deleting')}><AiOutlineDelete/></Button>
                     <Button color='orange' onClick={()=>setPopUp('editing')}><AiOutlineEdit/></Button>
-                </ul>
+                </ul>}
             </span>
+            </Container>
+            }
         </Content>
     )
 }
+const Container=styled.div`
+display:flex;flex-direction:column;justify-content:space-between;
+`
+
 const Content=styled.div`.corpessoa{display:flex}
 display:flex;padding:10px;box-sizing:border-box;
 width:90vw;position:fixed;max-width:500px;

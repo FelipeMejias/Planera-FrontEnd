@@ -88,6 +88,10 @@ export const getEvents = async (token)=> {
   return api.get(`/event`, buildHeader(token));
 }
 
+export const findEventParticipants = async (id,token)=> {
+  return api.get(`/event/${id}`, buildHeader(token));
+}
+
 
 export const desactivateToken = async (token) => {
   await api.patch(

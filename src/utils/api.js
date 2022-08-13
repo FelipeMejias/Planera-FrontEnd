@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const api = axios.create({
   //baseURL: "https://-----.herokuapp.com"
-  baseURL: "http://localhost:5738",
+  baseURL: "https://planera-back.herokuapp.com",
 });
 
 function buildHeader(token){

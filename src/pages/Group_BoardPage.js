@@ -101,7 +101,7 @@ font-size:35px;border:0vh solid black;
 h2{font-size:18px}
 `
 const BoardContainer=styled.section`
-height:10vh;width:96vw;display:flex;flex-direction:row;margin:0 0 10px 0;
+width:96vw;height:85vh;display:flex;flex-direction:row;margin:0 0 10px 0;
 `
 const Content=styled.div`
 width: 100%;box-sizing:border-box;height:100vh;

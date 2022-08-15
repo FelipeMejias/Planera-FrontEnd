@@ -21,6 +21,7 @@ export default function PlanerPage(){
     const [myHabits,setMyHabits]=useState([])
     const [details,setDetails]=useState({})
     const [popUp,setPopUp]=useState('')
+    const [error,setError]=useState('')
 
     function defineNow(){
         const now=dayjs().format('HH:mm-d');
@@ -32,6 +33,7 @@ export default function PlanerPage(){
     const [now,setNow]=useState({day:null,scrollIndex:null})
 
     function findHabits(scroll,size=preferences.size){
+        if(token==='visiting')return;
         const promise1=getHabits(token)
         promise1.then(res1=>{
             const promise2=getEvents(token)
@@ -45,7 +47,13 @@ export default function PlanerPage(){
             })
             promise2.catch((e)=>{console.log(e)})
         })
-        promise1.catch((e)=>{console.log(e)})
+        promise1.catch((e)=>{
+            console.log(e)
+            if(e.response){
+                return setError(e.response.data)
+            }
+            setError('Desculpe. Nosso servidor está fora do ar')
+        })
     }
     function findIndex_scrollBoard(habits,size){
         let earlierHabit=Infinity
@@ -70,6 +78,7 @@ export default function PlanerPage(){
 
     return(
         <Content>
+             {error?<Modal buttons={false} text={error} functionYes={()=>setError('')} />:<></>}
             <PlanerContext.Provider value={{ popUp, setPopUp,findHabits }}>
             {popUp==='creating'?<CreateHabit create={true}/>:<></>}
             {popUp==='detailing'||popUp==='deleting'?<HabitDetails setDetails={setDetails} details={details}/>:<></>}
@@ -96,20 +105,35 @@ background-color:#cc9139;
 color:#6b491a;
 font-size:35px;border:0vh solid black;
 h2{font-size:18px}
+@media(min-width:900px){
+    margin-bottom:10px
+}
 `
 const Header=styled.section`
 height:10vh;width:96vw;display:flex;margin:0 0 10px 0;
 justify-content:space-between;align-items:center;
 
+@media(min-width:900px){
+    flex-direction:column;width:2vw;
+}
+
 `
 const BoardContainer=styled.section`
-height:95vh;display:flex;justify-content:space-between;flex-wrap:wrap
+width:95vw;height:85vh;display:flex;justify-content:space-between;flex-wrap:wrap;
+@media(min-width:900px){
+    height:93vh
+}
 `
 const Content=styled.div`
 width: 100%;height:100vh;
 background-color: #cc9139;
 display: flex;flex-direction:column;
-align-items: center;
 
 button{cursor:pointer}
+@media(max-width:900px){
+    align-items: center;
+}
+@media(min-width:900px){
+    flex-direction:row;padding-top:3vh;box-sizing:border-box;justify-content:space-evenly;
+}
 `

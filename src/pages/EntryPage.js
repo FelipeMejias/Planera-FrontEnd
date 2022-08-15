@@ -18,8 +18,8 @@ export default function EntryPage(){
     function logIn(event){
         event.preventDefault()
         const formData={name,password}
-        signIn(formData)
-        .then(res=>{
+        const promise=signIn(formData)
+        promise.then(res=>{
             const {token,user}=res.data
             setToken(token)
             setUser(user)
@@ -27,9 +27,12 @@ export default function EntryPage(){
             localStorage.setItem("user", JSON.stringify(user))
             navigate('/menu')
         })
-        .catch(e=>{
-          setError(e.response.data)
+        promise.catch(e=>{
           console.log(e)
+          if(e.response && e.response.data){
+            return setError(e.response.data)
+          }
+          setError('Desculpe. Nosso servidor está fora do ar')
         })
     }
     
@@ -59,7 +62,7 @@ const MainButton=styled.button`
 width:42vw;height:70px;background-color:#6B491A;margin-top:40px;
   display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;
   border:0;border-radius:10px;
-  color:white;font-size:25px;
+  color:white;font-size:25px;max-width:280px;
 `
 const Content=styled.div`
 h6{font-family: 'Amatic SC', cursive;margin:20px 0 0 0;font-size:80px;}
@@ -69,13 +72,16 @@ background-color: #CC9139;
 display: flex;flex-direction:column;
 align-items: center;
 button{cursor:pointer}
-input{padding-left:13px;width:100%;height:50px;background-color:#6B491A;margin-top:40px;
-  color:white;font-size:25px;border:0;border-radius:5px}
 
+  input{padding-left:13px;width:100%;height:50px;background-color:#6B491A;margin-top:40px;
+    color:white;font-size:25px;border:0;border-radius:5px}
+  
   h1{color:white;font-size:25px}
   ion-icon{color:white;font-size:50px}
   form{width:80vw;display:flex;flex-direction:column;align-items:center;
-  position:relative}
+  position:relative;
+    max-width:500px
+}
   
 `
 const Button=styled.button`

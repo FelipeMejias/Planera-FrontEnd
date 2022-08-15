@@ -26,7 +26,7 @@ export default function Board({inGroup,now,habits,setDetails,setPopUp}){
         const hashList=buildHashList(day.content)
 
         return(
-            <Day scale={scale}>
+            <Day scale={scale} inGroup={inGroup}>
 
                 {index===(with_sab_dom?now.day:now.day-1)?<NowIndicator level={now.level*4.16}></NowIndicator>:<></>}
                 {hours.map(i=>(<Marks level={i*4.16} ></Marks>))}
@@ -93,8 +93,10 @@ const Day =styled.div`
     position:relative;
 p{
     font-size:13px;
-    color:#CC9139;top:11.0vh;z-index:8;position:fixed;
-   
+    color:#CC9139;top:11.6vh;z-index:8;position:fixed;
+   @media(min-width:900px){
+    ${props=>props.inGroup?'':'top:3.3vh'}
+   }
 
 }.divz{width:18px;display:flex;justify-content:center;
     height:18px;position:absolute;right:0.6vw;border-radius:50%;
@@ -104,7 +106,7 @@ p{
 
 `
 const Content=styled.div`
-width:96vw;height:85vh;
+width:100%;height:100%;
 overflow:hidden;overflow-y:scroll;box-sizing:border-box;
 background-color: #d3b28b;
 border:0.3vh solid #6b491a;

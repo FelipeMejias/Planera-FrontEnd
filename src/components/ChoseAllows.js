@@ -2,7 +2,7 @@ import { useState,useEffect, useContext } from "react"
 import { AiFillDelete, AiFillEdit, AiFillEye, AiOutlineArrowLeft, AiOutlineClose, AiOutlineCloseSquare, AiOutlineDelete, AiOutlineDeleteColumn, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineLogout, AiOutlineUngroup, AiOutlineUsergroupAdd, AiOutlineUsergroupDelete, AiTwotoneEdit } from "react-icons/ai"
 import { useNavigate } from "react-router-dom"
 import styled from 'styled-components'
-import { exitGroup, findAllows, getEvents, getHabits, postAllow, rejectInvitation } from "../utils/api"
+import { exitGroup, findAllows, getEvents, getGroups, getHabits, postAllow, rejectInvitation } from "../utils/api"
 import GroupContext from "../contexts/GroupContext"
 import TokenContext from "../contexts/TokenContext"
 import Modal from "./Modal"
@@ -21,7 +21,7 @@ export default function ChooseAllows({setFace,groupId}){
     function buildMyColors(){
         const promise1=getHabits(token)
         promise1.then(res1=>{
-            const promise2=getEvents(token)
+            const promise2=getGroups(token)
             promise2.then(res2=>{
                 const habits=[...res1.data,...res2.data]
                 const colors=[]

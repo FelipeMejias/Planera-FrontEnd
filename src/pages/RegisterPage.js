@@ -24,8 +24,11 @@ export default function Cadastro({setNomeCad,setH}){
         navigate('/signin')
       })
       promise.catch(e=>{
-        setError(e.response.data)
         console.log(e)
+        if(e.response && e.response.data){
+          return setError(e.response.data)
+        }
+        setError('Desculpe. Nosso servidor está fora do ar')
       })
     }
     return(
@@ -51,7 +54,7 @@ const MainButton=styled.button`
 width:42vw;height:70px;background-color:#6B491A;margin-top:40px;
   display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;
   border:0;border-radius:10px;
-  color:white;font-size:25px
+  color:white;font-size:25px;max-width:280px;
 `
 
 const Content=styled.div`
@@ -66,7 +69,7 @@ input{padding-left:13px;width:100%;height:50px;background-color:#6B491A;margin-t
   h1{color:white;font-size:25px}
   ion-icon{color:white;font-size:50px}
   form{width:80vw;display:flex;flex-direction:column;align-items:center;
-    position:relative}
+    position:relative;max-width:500px}
 `
 const Button=styled.button`
 background-color:#CC9139;width:50vw;height:50px;margin-top:40px;

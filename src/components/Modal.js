@@ -42,7 +42,7 @@ const Content = styled.div`
     background-color: #333333;
     border-radius: 50px;
     padding:0 20px 0 20px;
-    span{width:300px;display:flex;};
+    span{width:300px;display:flex;flex-direction:row;};
     h3{color:white;
         font-family: 'Lato';
         font-style: normal;

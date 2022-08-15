@@ -46,6 +46,7 @@ export default function MenuPage(){
       })
   }
   function getMyGroups(){
+    if(token==='visiting')return;
     const promise=getGroups(token)
     promise.then(res=>{
       setMyGroups(res.data)
@@ -53,6 +54,10 @@ export default function MenuPage(){
     })
     promise.catch(e=>{
       console.log(e)
+      if(e.response){
+        return setError(e.response.data)
+      }
+      setError('Desculpe. Nosso servidor está fora do ar')
     })
 }
   function respondInvitation(id,response){
@@ -77,8 +82,10 @@ export default function MenuPage(){
     promise.catch(e=>console.log(e))
   }
   useEffect(getMyGroups,[])
+  useEffect(()=>{if(!token)navigate('/signin')},[])
     return(
       <Content>
+        {error?<Modal buttons={false} text={error} functionYes={()=>setError('')} />:<></>}
       {invitation}
       {error?<Modal buttons={false} text={error} functionYes={()=>setError('')} />:<></>}
       {!creatingGroup?

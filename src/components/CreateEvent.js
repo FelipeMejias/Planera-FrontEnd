@@ -17,6 +17,7 @@ export default function CreateEvent({setFace,groupId}){
     const [begin,setBegin]=useState('')
     const [end,setEnd]=useState('')
     const [day,setDay]=useState(null)
+    const [comingSoon,setComingSoon]=useState('')
     const daysNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
     const allSelected=chosen.length===members.length
     function saveEvent(){
@@ -48,13 +49,13 @@ export default function CreateEvent({setFace,groupId}){
                             <input value={end} onChange={(e)=>setEnd(e.target.value)} placeholder='horário final'  type='number' ></input>
                             <input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder='título' ></input>        
                         </div>  
-                        <ActionButton onClick={()=>{}}><AiOutlineClockCircle/></ActionButton>
+                        <ActionButton onClick={()=>setComingSoon('Em breve será possível ver quem está disponível neste horário. Clique no botão salvar e o evento será criado independente da disponibilidade')}><AiOutlineClockCircle/></ActionButton>
                         <ActionButton onClick={saveEvent}><AiOutlineSave/></ActionButton>
                     </span>
                 </Form>
             </DataInsertion>
             <MemberBox>
-
+                <p>{comingSoon}</p>
             </MemberBox>
         </Content>
     )
@@ -80,7 +81,7 @@ background-color:${props=>props.selected?'green':'#B1CACE'};margin-right:3px;
 `
 const MemberBox=styled.div`position:relative;margin-top:2px;
 display:flex;flex-direction:column;align-items:center;
-width:400px;height:320px;background-color:#c18736;border-radius:5px;padding:10px 0 10px 0;
+width:400px;height:320px;background-color:#c18736;border-radius:5px;padding:10px;
 `
 const Form=styled.div`
 display:flex;flex-direction:row;justify-content:space-evenly;padding-left:30px;

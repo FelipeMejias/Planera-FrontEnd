@@ -34,21 +34,27 @@ export default function MenuPage(){
   }
   function saveGroup(event){
       event.preventDefault()
-      if(!token)return navigate('/signin')
-      if(!name)return setError('Escolha o nome do grupo')
       const groupData={name}
       const promise=postGroup(groupData,token)
       promise.then(()=>{
           setCreatingGroup(false)
           getMyGroups()
       })
-      promise.catch(e=>{if(e.message){setError(e.message)}else{console.log(e)}})
+      promise.catch(e=>{
+        setError(e.response.data)
+        console.log(e)
+      })
   }
   function getMyGroups(){
-    getGroups(token).catch(e=>console.log(e)).then((res)=>{
+    const promise=getGroups(token)
+    promise.then(res=>{
       setMyGroups(res.data)
       findEnvitations()
-  })}
+    })
+    promise.catch(e=>{
+      console.log(e)
+    })
+}
   function respondInvitation(id,response){
     const promise=response?aceptInvitation(id,token):rejectInvitation(id,token)
     promise.then(()=>{
@@ -74,23 +80,26 @@ export default function MenuPage(){
     return(
       <Content>
       {invitation}
+      {error?<Modal buttons={false} text={error} functionYes={()=>setError('')} />:<></>}
       {!creatingGroup?
         <Menu>
           <h6>PlanerA</h6>
           <Button color='#6B491A' onClick={()=>navigate('/')}><h1>Agenda</h1></Button>
           <span><h5>grupos</h5><ButtonIcon color='#6B491A' onClick={()=>setCreatingGroup(true)}><AiOutlinePlus/></ButtonIcon></span>
+          <GroupBox>
             {myGroups.map((group)=>(
               <Button className='groupButton' color={colorCodes[colorNames.indexOf(group.color)]} onClick={()=>{
                 setGroup({color:group.color})
                 navigate(`/group/${group.id}`)
               }}><h1>{group.name}</h1></Button>
             ))}
+          </GroupBox>
           <Button className='logOut' color='brown' onClick={logOut} >Log out</Button>
         </Menu>:
         <CreateGroup>
           <div>
             <p>Novo grupo:</p>
-            <input onChange={(e)=>setName(e.target.value)} placeholder='título' value={name} />
+            <input onChange={(e)=>setName(e.target.value)} placeholder='nome...' value={name} />
           </div>
           <span>
             <Button color='brown' className='cancel' onClick={()=>setCreatingGroup(false)}><AiOutlineClose/></Button>
@@ -102,13 +111,20 @@ export default function MenuPage(){
       </Content>
     )
 }
+const GroupBox=styled.div`position:relative;margin-top:2px;overflow:hide;overflow-y:scroll;
+display:flex;align-items:center;flex-wrap:wrap;justify-content:space-evenly;
+width:370px;height:220px;background-color:#c18736;border-radius:5px;padding:10px;
+::-webkit-scrollbar {
+  width: 0px;
+}
+`
 const Menu =styled.section`
 display: flex;flex-direction:column;
 align-items: center;
 font-family: 'Amatic SC', cursive;
 h6{margin:40px 0 40px 0;font-size:80px;}
 h5{font-size:50px;}
-span{margin:30px 0 30px 0;width:140px}
+span{margin:20px 0 15px 0;width:140px}
 button{box-shadow: -2.5px 2.5px 2.5px rgba(0, 0, 0, 0.15)}
 `
 const Content=styled.div`
@@ -128,7 +144,7 @@ background-color:#6B491A;
 color:#CC9139;
 font-size:46px;border:0vh solid black;
 `
-const Button=styled.button`margin:0 0 10px 0;
+const Button=styled.button`margin: 10px ;
 background-color:red;max-width:400px;
 width:150px;height:50px;background-color:${props=>props.color};
   display:flex;justify-content:center;align-items:center;

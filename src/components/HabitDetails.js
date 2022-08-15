@@ -10,7 +10,7 @@ import PlanerContext from '../contexts/PlanerContext';
 import Modal from './Modal';
     
 export default function HabitDetails({details,setDetails}){
-    const {groupId,id,title,begin,end,day,color}=details
+    const {groupId,id,title,begin,end,day,color,name}=details
     const {token} = useContext(TokenContext)
     const {setPopUp,findHabits,popUp} = useContext(PlanerContext)
     const [coloring,setColoring]=useState(false)
@@ -68,7 +68,7 @@ export default function HabitDetails({details,setDetails}){
         <Container>
             <div className='corpessoa'>
                 <Button color='black' onClick={()=>setShowing(false)}><AiOutlineArrowLeft/></Button>
-                <p>participantes:</p>
+                <p>participantes do evento:</p>
             </div>
             <p>{participants}</p>
         </Container>
@@ -85,6 +85,7 @@ export default function HabitDetails({details,setDetails}){
                 <div>
                     <p>{begin} ~ {end}</p>
                     <p>{dayNames[day]}</p>
+                    <p>grupo: {name}</p>
                 </div>
             </span>
             <span>
@@ -110,7 +111,7 @@ display:flex;flex-direction:column;justify-content:space-between;
 const Content=styled.div`.corpessoa{display:flex}
 display:flex;padding:10px;box-sizing:border-box;
 width:90vw;position:fixed;max-width:500px;
-height:30vh;z-index:6;top:8vh;left:20vw;
+height:30vh;z-index:6;top:18vh;left:5vw;
     background-color: white;
     flex-direction:column;justify-content:space-between;
     border-radius: 1.5vh;
@@ -123,9 +124,7 @@ strong{font-weight:700;font-size:20px;}}
 input{height:28px;width:97%;font-size:20px;margin-top:1vh;margin-bottom:1vh;}
 .orgDetalhesEvento{display:flex}
 ul{display:flex;align-items:center;justify-content:space-between}
-@media(max-width:900px){
-    position:fixed;top:18vh;z-index:6;width:90vw;left:5vw;height:220px
-}
+
 `
 const Button=styled.button`
 height:40px;

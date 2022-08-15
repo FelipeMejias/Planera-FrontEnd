@@ -6,14 +6,15 @@ export default function Modal({ buttons, functionNo, functionYes, text }) {
         <Overlay>
             {buttons?
             <Content>
-                <h1>{text}</h1>
+                <h3>{text}</h3>
                 <span>
                     <ButtonNo onClick={()=>functionNo()}><p>não</p></ButtonNo>
                     <ButtonYes onClick={()=>functionYes()}><p>sim</p></ButtonYes>
                 </span>
             </Content>:
             <Content>
-                <h1>{text}</h1>
+                <h3>{text}</h3>
+                <ButtonYes onClick={()=>functionYes()}><p>OK</p></ButtonYes>
             </Content>
             }
         </Overlay>
@@ -42,12 +43,13 @@ const Content = styled.div`
     border-radius: 50px;
     padding:0 20px 0 20px;
     span{width:300px;display:flex;};
-    h1{color:white;
+    h3{color:white;
         font-family: 'Lato';
         font-style: normal;
         font-weight: 700;
         font-size: 23px;
         text-align: center;
+        position:block;
     }
     p{
         font-family: 'Lato';

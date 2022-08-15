@@ -66,7 +66,7 @@ export default function PlanerPage(){
         setInterval(defineNow,60000)
     },[])
 
-    useEffect(()=>{if(!token)navigate('/signin')},[token])
+    useEffect(()=>{if(!token)navigate('/signin')},[])
 
     return(
         <Content>
@@ -77,11 +77,9 @@ export default function PlanerPage(){
             {popUp==='editing'?<CreateHabit create={false} details={details} />:<></>}
             {popUp==='loading habits'?<Modal buttons={false} text={`carregando agenda de ${user.name}`}/>:<></>}
             <Header>
-                <span>
-                    <Button onClick={()=>navigate('/menu')}><AiFillHome/></Button>
-                    <Button onClick={()=>setPopUp('creating')}><AiOutlineFileAdd/></Button>
-                    <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
-                </span>
+                <Button onClick={()=>navigate('/menu')}><AiFillHome/></Button>
+                <Button onClick={()=>setPopUp('creating')}><AiOutlineFileAdd/></Button>
+                <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
             </Header>
             <BoardContainer>
                 <Board inGroup={false} now={now} habits={myHabits} setDetails={setDetails} setPopUp={setPopUp} />
@@ -100,22 +98,18 @@ font-size:35px;border:0vh solid black;
 h2{font-size:18px}
 `
 const Header=styled.section`
-height:95vh;width:9vh;display:flex;flex-direction:column;align-items:center;
-span{display:flex;height:24vh;justify-content:space-between;width:85%;flex-direction:column}
-@media(max-width:900px){
-    height:10vh;width:96vw;display:flex;flex-direction:row;margin:0 0 10px 0;
-    span{flex-direction:row;width:96vw;height:7vh;justify-content:space-between;align-items:center;}
-}`
+height:10vh;width:96vw;display:flex;margin:0 0 10px 0;
+justify-content:space-between;align-items:center;
+
+`
 const BoardContainer=styled.section`
 height:95vh;display:flex;justify-content:space-between;flex-wrap:wrap
 `
 const Content=styled.div`
 width: 100%;height:100vh;
 background-color: #cc9139;
-display: flex;justify-content:center;
+display: flex;flex-direction:column;
 align-items: center;
-@media(max-width:900px){
-    flex-direction:column;justify-content:flex-start;align-items:center;
-}
+
 button{cursor:pointer}
 `

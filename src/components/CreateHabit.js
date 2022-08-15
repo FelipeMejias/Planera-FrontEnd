@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import TokenContext from '../contexts/TokenContext';
 import { postHabit, putHabit } from '../utils/api';
 import PlanerContext from '../contexts/PlanerContext';
+import Modal from './Modal';
 	
     
 export default function CreateHabit({create,details}){
@@ -15,19 +16,11 @@ export default function CreateHabit({create,details}){
     const [begin,setBegin]=useState(create?'':details.begin.replace(':','.'))
     const [end,setEnd]=useState(create?'':details.end.replace(':','.'))
     const [day,setDay]=useState(create?null:details.day)
-    const [errorMsg,setErrorMsg]=useState('')
-    function checkPattern(string){
-        const c=string.length
-        if(c===1||c===2||c===4||c===5)return false
-        return true
-    }
+    const [error,setError]=useState('')
+    
     function saveHabit(event){
         event.preventDefault()
-        if(!token)return navigate('/signin')
-        if(checkPattern(begin))return setErrorMsg('Escreva a hora de início corretamente')
-        if(checkPattern(end))return setErrorMsg('Escreva a hora do final corretamente')
-        if(!day)return setErrorMsg('Escolha ao menos um dia da semana')
-        if(!title)return setErrorMsg('Escolha um título')
+        
         const habitData={title,begin,end,day}
 
         const promise=create?postHabit(habitData,token):putHabit(details.id,habitData,token)
@@ -35,12 +28,16 @@ export default function CreateHabit({create,details}){
             setPopUp('')
             findHabits()
         })
-        promise.catch((e)=>{console.log(e)})
+        promise.catch(e=>{
+            setError(e.response.data)
+            console.log(e)
+        })
     }
     
     const daysNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
     return(
         <Content>
+            {error?<Modal buttons={false} text={error} functionYes={()=>setError('')} />:<></>}
             <ul>
                 {daysNames.map((name,index)=>(
                     <DayButton onClick={()=>setDay(index)} selected={day===index}>{name}</DayButton>
@@ -77,7 +74,7 @@ button{max-width:100px;width:24vw;border-radius:10px;font-size:15px;height:35px;
     span{display:flex}
 `
 const Content=styled.div`min-height:190px;
-position:fixed;z-index:10;width:90vw;height:30vh;top:8vh;left:20vw;
+position:fixed;z-index:10;width:90vw;height:30vh;top:18vh;left:5vw;
 max-width:500px;
 display:flex;padding:10px;box-sizing:border-box;flex-direction:column;
     background-color: white;
@@ -88,7 +85,7 @@ display:flex;padding:10px;box-sizing:border-box;flex-direction:column;
         display:flex;justify-content:space-between;align-items:center;
     }.sabdom{width:38%}
     @media(max-width:900px){
-        position:fixed;top:18vh;z-index:6;width:90vw;left:5vw;
+        position:fixed;z-index:6;width:90vw;left:5vw;
     }
     button{cursor:pointer}
 `

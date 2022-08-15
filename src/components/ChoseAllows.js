@@ -116,7 +116,7 @@ export default function ChooseAllows({setFace,groupId}){
     )
 }
 
-const ActionButton=styled.div`
+const ActionButton=styled.button`
 position:absolute;bottom:30px;
 display:flex;justify-content:center;align-items:center;
 width:100px;height:100px;border-radius:50%;
@@ -127,6 +127,7 @@ font-size:60px;border:0;
 const Content=styled.div`
 display:flex;align-items:center;
     flex-direction:column;
+    button{cursor:pointer;}
 `
 const ColorBall=styled.div`width:22px;height:22px;border-radius:50%;
 border:0.3vh solid black;margin-right:1vh;
@@ -137,7 +138,7 @@ const ColorAllow=styled.div`
     display:flex;align-items:center;
     margin-top:20px;
     `
-const ColorSquare=styled.div`
+const ColorSquare=styled.button`border:0;
     width:130px;height:50px;background-color:${props=>props.color};border-radius:5px;
     display:flex;justify-content:center;align-items:center;flex-direction:column;
     small{font-size:13px;color:#4f4f4f}

@@ -6,35 +6,35 @@ import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
 import { signUp } from '../utils/api';
 import UserContext from '../contexts/UserContext';
+import Modal from '../components/Modal';
 
     
 export default function Cadastro({setNomeCad,setH}){
     const {setUser} = useContext(UserContext)
-    const [errorMsg,setErrorMsg]=useState('')
+    const [error,setError]=useState('')
     const navigate=useNavigate()
     const [name,setName]=useState('')
     const [password,setPassword]=useState('')
     function register(event){
       event.preventDefault()
-      if(!name||!password){return setErrorMsg('preencha seu nome e senha')}
       const formData={name,password}
-      const promessa=signUp(formData)
-      promessa.then(res=>{
+      const promise=signUp(formData)
+      promise.then(res=>{
         setUser({name})
         navigate('/signin')
       })
-      promessa.catch(err=>{
-        if(err.response.status===409){setErrorMsg('Esse nome já está em uso')}
-    })
-      
+      promise.catch(e=>{
+        setError(e.response.data)
+        console.log(e)
+      })
     }
     return(
         <Content>
+            {error?<Modal buttons={false} text={error} functionYes={()=>setError('')} />:<></>}
             <form onSubmit={register}>
               <input value={name} onChange={e=>setName(e.target.value)}  placeholder='nome...'></input>
               <input  type='password' value={password} onChange={e=>setPassword(e.target.value)}  placeholder='senha...'></input>
-              <button type='submit'>Cadastrar</button>
-              <Alert>{errorMsg}</Alert>
+              <MainButton type='submit'>Cadastrar</MainButton>
             </form>
             <Button onClick={()=>navigate('/signin')}>
               Voltar ao login
@@ -46,19 +46,20 @@ export default function Cadastro({setNomeCad,setH}){
         </Content>
     )
 }
-const Alert=styled.p`
-position:absolute;top:100px;left:0;font-size:20;color:yellow;
+
+const MainButton=styled.button`
+width:42vw;height:70px;background-color:#6B491A;margin-top:40px;
+  display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;
+  border:0;border-radius:10px;
+  color:white;font-size:25px
 `
+
 const Content=styled.div`
 width: 100%;box-sizing:border-box;height:100vh;
 background-color: #CC9139;
 display: flex;flex-direction:column;
 align-items: center;
-button{width:42vw;height:70px;background-color:#6B491A;margin-top:40px;
-  display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;
-  border:0;border-radius:10px;
-  color:white;font-size:25px;cursor:pointer
-}
+button{cursor:pointer}
 input{padding-left:13px;width:100%;height:50px;background-color:#6B491A;margin-top:40px;
   color:white;font-size:25px;border:0;border-radius:5px}
 
@@ -67,8 +68,7 @@ input{padding-left:13px;width:100%;height:50px;background-color:#6B491A;margin-t
   form{width:80vw;display:flex;flex-direction:column;align-items:center;
     position:relative}
 `
-const Button=styled.div`
-cursor:pointer;
+const Button=styled.button`
 background-color:#CC9139;width:50vw;height:50px;margin-top:40px;
 display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;
 border:0;border-radius:10px;

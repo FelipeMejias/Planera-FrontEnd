@@ -12,14 +12,16 @@ import GroupContext from '../contexts/GroupContext';
 export default function CreateEvent({setFace,groupId}){
     const navigate=useNavigate()
     const {token} = useContext(TokenContext)
-    const {group,chosen,setChosen}=useContext(GroupContext)
+    const {group,chosen,setChosen,members}=useContext(GroupContext)
     const [title,setTitle]=useState('')
     const [begin,setBegin]=useState('')
     const [end,setEnd]=useState('')
     const [day,setDay]=useState(null)
     const daysNames=['DOM','SEG','TER','QUA','QUI','SEX','SAB']
+    const allSelected=chosen.length===members.length
     function saveEvent(){
-        const eventData={title,begin,end,day,chosen}
+        let eventData={title,begin,end,day,chosen}
+        if (allSelected)eventData={...eventData,chosen:[]}
         const promise=postEvent(eventData,groupId,token)
         promise.then(()=>{
             setFace('main')

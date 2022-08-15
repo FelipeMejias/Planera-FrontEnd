@@ -21,6 +21,11 @@ export default function GroupPage(){
     const navigate=useNavigate()
     const [face,setFace]=useState('main')
     const [coloring,setColoring]=useState(false)
+    const allSelected=chosen.length===members.length
+    const noChosen=chosen.length===0
+    const colorCodes=['#fca50f','#f45ace','#53ceed']
+    const colorNames=['orange','pink','aqua']
+
     function getMembers(){
         const promise=getGroup(parseInt(groupId),token)
         promise.then(res=>{
@@ -32,16 +37,6 @@ export default function GroupPage(){
             console.log(e)
         })
     }
-    const allSelected=chosen.length===members.length
-    const noChosen=chosen.length===0
-    const colorCodes=['#fca50f','#f45ace','#53ceed']
-    const colorNames=['orange','pink','aqua']
-
-    
-
-    const colorList=<ul>{colorCodes.map((color,i)=>(
-        <ChoseColor onClick={()=>changeColor(colorNames[i])} color={color} position={i*3}/>
-    ))}</ul>
 
     function changeColor(color){
         const promise=changeGroupColor({color},groupId,token)
@@ -60,8 +55,12 @@ export default function GroupPage(){
         setMembers([]);setChosen([]);setGroup({})
         navigate('/menu')
     }
+
+    const colorList=<ul>{colorCodes.map((color,i)=>(
+        <ChoseColor onClick={()=>changeColor(colorNames[i])} color={color} position={i*3}/>
+    ))}</ul>
+
     useEffect(getMembers,[])
-    
     return(
         <Content>
             {face==='adding'?<AddMember setFace={setFace} groupId={groupId} />:<></>}
@@ -80,8 +79,9 @@ export default function GroupPage(){
                     </Header>
                     
                     <MemberBox>
-                    {noChosen?<></>:
-                        <ToogleSelectAll onClick={()=>setChosen(allSelected?[]:members.map(p=>p.id))}>{allSelected?'limpar seleções':'selecionar todos'}</ToogleSelectAll>}
+                        <ToogleSelectAll onClick={()=>setChosen(allSelected?[]:members.map(p=>p.id))}>
+                            {allSelected?'limpar seleções':'selecionar todos'}
+                        </ToogleSelectAll>
                         {members.map((member,i)=>(
                             <Member selected={chosen.includes(member.id)}
                                 onClick={()=>handleSelection(member.id)}>
@@ -128,7 +128,8 @@ const Header=styled.section`
 h1{font-size:27px;color:#6b491a}
 height:11vh;width:96vw;display:flex;flex-direction:column;align-items:center;
 margin-bottom:80px;
-    span{display:flex;width:96vw;height:7vh;justify-content:space-between;align-items:center;}
+    span{display:flex;width:96vw;
+        height:7vh;justify-content:space-between;align-items:center;}
 `
 const ButtonIcon=styled.button`display:flex;justify-content:center;align-items:center;
 width:7vh;height:7vh;border-radius:10px;position:relative;

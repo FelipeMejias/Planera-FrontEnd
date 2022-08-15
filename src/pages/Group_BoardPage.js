@@ -80,9 +80,9 @@ export default function GroupBoardPage(){
                 <h1>{definePageName()}</h1>
                 <Button onClick={()=>setPopUp('prefering')}><AiFillSetting /></Button>
             </Header>
-            <div className='orgAgenda2'>
+            <BoardContainer>
                 <Board inGroup={true} now={now} habits={habits} setDetails={setDetails}  setPopUp={setPopUp}/>
-            </div>
+            </BoardContainer>
         </Content>
     )
 }
@@ -100,11 +100,13 @@ color:#6b491a;
 font-size:35px;border:0vh solid black;
 h2{font-size:18px}
 `
-
+const BoardContainer=styled.section`
+height:10vh;width:96vw;display:flex;flex-direction:row;margin:0 0 10px 0;
+`
 const Content=styled.div`
 width: 100%;box-sizing:border-box;height:100vh;
 background-color: #cc9139;
-display: flex;justify-content:center;
+display: flex;flex-direction:column;
 align-items: center;
 .orgAgenda{
     height:95vh;width:9vh;display:flex;flex-direction:column;align-items:center;}
@@ -113,8 +115,4 @@ align-items: center;
     width:96vw;height:7vh;justify-content:space-between;align-items:center;}
 }
 button{cursor:pointer}
-@media(max-width:900px){
-    flex-direction:column;justify-content:flex-start;align-items:center;
-    .orgAgenda{height:10vh;width:96vw;display:flex;flex-direction:row;margin:0 0 10px 0;}
-    
 `

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { getPendent, sendEnvitation } from "../utils/api"
 import TokenContext from "../contexts/TokenContext"
 import UserContext from "../contexts/UserContext"
+import Modal from "./Modal"
 
 export default function AddMember({setFace,groupId}){
     const {token} = useContext(TokenContext)
@@ -16,7 +17,10 @@ export default function AddMember({setFace,groupId}){
             setFace('main')
             setError('convite enviado!')
         })
-        promise.catch(e=>{if(e.message){setError(e.message)}else{console.log(e)}})
+        promise.catch(e=>{
+            setError(e.response.data)
+            console.log(e)
+        })
     }
     function getPendentEnvitations(){
         const promise=getPendent(groupId,token)
@@ -28,15 +32,18 @@ export default function AddMember({setFace,groupId}){
     useEffect(getPendentEnvitations,[])
     return(
         <Content>
-            <div>
-                <h1>Novo membro:</h1>
-                <h2>Convites pendentes:</h2>
-                <input onChange={(e)=>setGuest(e.target.value)} value={guest} placeholder='convidado...'/>
-            </div>
-            <span>
-                <Button className='cancel' onClick={()=>setFace('main')}><AiOutlineClose/></Button>
-                <Button onClick={addMember} >Convidar</Button>
-            </span>
+            {error?<Modal buttons={false} text={error} functionYes={()=>setError('')} />:<></>}
+            <NewMember>
+                <div>
+                    <h1>Novo membro:</h1>
+                    <h2>Convites pendentes:</h2>
+                    <input onChange={(e)=>setGuest(e.target.value)} value={guest} placeholder='convidado...'/>
+                </div>
+                <span>
+                    <Button className='cancel' onClick={()=>setFace('main')}><AiOutlineClose/></Button>
+                    <Button onClick={addMember} >Convidar</Button>
+                </span>
+            </NewMember>
             <MemberBox>
                 {pendents.map(pendent=>(
                     <Member>
@@ -59,6 +66,11 @@ display:flex;align-items:center;width:230px;;
 font-size:25px;color:black;border-radius:5px;
 margin:5px 0 5px 0;border:0
 `
+const NewMember=styled.div`
+display:flex;flex-direction:column;align-items:center;
+
+
+`
 
 const Content=styled.div`
 display:flex;flex-direction:column;align-items:center;
@@ -69,6 +81,7 @@ h1{font-size:23px;position:absolute;color:#6B491A;margin-top: 50px ;}
 h2{font-size:23px;position:absolute;color:#6B491A;margin-top: 250px ;}
 .cancel{width:50px;background-color:brown}
 span{width:260px;margin:35px 0 0 0;display:flex;justify-content:space-between;}
+
 `
 const Button=styled.button`margin:0 0 10px 0;
 background-color:red;max-width:400px;

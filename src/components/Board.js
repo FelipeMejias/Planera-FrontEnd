@@ -93,10 +93,8 @@ const Day =styled.div`
     position:relative;
 p{
     font-size:13px;
-    color:#CC9139;top:2.7vh;z-index:8;position:fixed;
-    @media(max-width:900px){
-        top:11.0vh
-    }
+    color:#CC9139;top:11.0vh;z-index:8;position:fixed;
+   
 
 }.divz{width:18px;display:flex;justify-content:center;
     height:18px;position:absolute;right:0.6vw;border-radius:50%;
@@ -106,20 +104,15 @@ p{
 
 `
 const Content=styled.div`
-width: 95vw;max-width:1050px;
-height: 95vh;overflow:hidden;overflow-y:scroll;box-sizing:border-box;
+width:96vw;height:85vh;
+overflow:hidden;overflow-y:scroll;box-sizing:border-box;
 background-color: #d3b28b;
 border:0.3vh solid #6b491a;
 border-top:2vh solid #6b491a;
 padding-left:11px;padding-right:11px;
 border-radius: 1.5vh;
 position:relative;
-@media(max-width:900px){
-    width:96vw;height:85vh;
-}
-@media(max-width:614px){
-    width:96vw;height:80vh;
-}
+
 ul{display:flex;width:100%}
 ::-webkit-scrollbar {
     width: 0px;

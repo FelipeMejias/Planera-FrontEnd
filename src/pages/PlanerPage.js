@@ -58,7 +58,7 @@ export default function PlanerPage(){
     function findIndex_scrollBoard(habits,size){
         let earlierHabit=Infinity
         for(let habit of habits){
-            if(habit.graphBegin < earlierHabit)earlierHabit=habit.graphBegin
+            if(habit.floor < earlierHabit)earlierHabit=habit.floor
         }
         scrollBoard(earlierHabit,size) 
     }

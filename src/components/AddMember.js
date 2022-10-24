@@ -18,8 +18,11 @@ export default function AddMember({setFace,groupId}){
             setError('convite enviado!')
         })
         promise.catch(e=>{
-            setError(e.response.data)
             console.log(e)
+        if(e.response){
+            return setError(e.response.data)
+        }
+        setError('Desculpe. Nosso servidor está fora do ar')
         })
     }
     function getPendentEnvitations(){

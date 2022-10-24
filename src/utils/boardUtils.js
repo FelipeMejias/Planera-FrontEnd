@@ -1,47 +1,26 @@
 export function buildHashList(list){
     const raw=[];
-    let c=false
-    let toBeat=-Infinity
     for(let k=0;k<list.length;k++){
-        const current=list[k]
-        const next=list[k+1]
-        const past=list[k-1]
-        if(current.floor<=toBeat){
-            raw.push(c)
-            if(current.floor+current.size>toBeat){
-                c=!c
-                toBeat=-Infinity
-            }
-            continue
-        }
         if(k!==0){
-            if(past.floor+past.size<=current.floor){
-                c=false
-            }else if(past.floor+past.size<=current.floor+current.size){
-                raw.push(c)
-                c=!c
-            }else{
-                raw.push(c)
-                toBeat=past.floor+past.size
+            if(raw[k-1].ceil>list[k].floor){
+                if(raw[k-1].ceil>list[k].floor+list[k].size){
+                    raw.push({value:raw[k-1].tip,ceil:raw[k-1].ceil,tip:raw[k-1].tip});continue;
+                }else{
+                    raw.push({value:raw[k-1].tip,ceil:list[k].floor+list[k].size,tip:!raw[k-1].tip});continue;
+                }
             }
         }
-        if(k===list.length-1){raw.push(null);continue;}
-        if(current.floor+current.size<=next.floor){
-            c=!c
-            raw.push(c)
-        }else if(current.floor+current.size<=next.floor+next.size){
-            raw.push(c)
-            c=!c
-        }else{
-            raw.push(c)
-            c=!c
-            toBeat=current.floor+current.size
+        if(k!==list.length-1){
+            if(list[k].floor+list[k].size>list[k+1].floor){
+                raw.push({value:false,ceil:list[k].floor+list[k].size,tip:true});continue;
+            }
         }
+        raw.push({value:null,ceil:list[k].floor+list[k].size,tip:null})
     }
-    const final=raw.map(value=>{
-        if (value===null)return {width:'92',position:''}
-        if (value===false)return {width:'44.2',position:'left:4%'}
-        if (value===true)return {width:'44.2',position:'right:4%'}
+    const final=raw.map(item=>{
+        if (item.value===null)return {width:'92',position:''}
+        if (item.value===false)return {width:'44.2',position:'left:4%'}
+        if (item.value===true)return {width:'44.2',position:'right:4%'}
     })
     return final
 }

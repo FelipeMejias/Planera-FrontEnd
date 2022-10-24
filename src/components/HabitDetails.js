@@ -85,7 +85,7 @@ export default function HabitDetails({details,setDetails}){
                 <div>
                     <p>{begin} ~ {end}</p>
                     <p>{dayNames[day]}</p>
-                    <p>grupo: {name}</p>
+                    {name?<p>grupo: {name}</p>:<></>}
                 </div>
             </span>
             <span>
